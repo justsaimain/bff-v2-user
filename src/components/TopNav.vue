@@ -1,10 +1,5 @@
 <template>
-    <v-app-bar
-        max-height="60"
-        color="primary"
-        elevate-on-scroll
-        scroll-target="#scrolling-techniques-7"
-    >
+    <v-app-bar max-height="60" color="primary" elevate-on-scroll fixed>
         <h3 class="app-name-text">Burmese Fantasy Football</h3>
         <v-spacer></v-spacer>
 

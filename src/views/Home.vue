@@ -1,7 +1,7 @@
 <template>
     <v-app id="inspire">
         <top-nav></top-nav>
-        <v-main class="grey lighten-3 my-auto">
+        <v-main class="main-app grey lighten-3 my-auto pt-13">
             <v-container>
                 <v-row class="primary main-header-div">
                     <v-col cols="12">
@@ -55,52 +55,158 @@
                                 </v-row>
                             </v-card>
                         </div>
+                        <recent-matches></recent-matches>
                         <div class="mt-5">
-                            <p class="recent-matches-text">Recent Matches</p>
-                            <div class="recent-matches-div">
-                                <v-card>
-                                    <p>Lorem.</p>
-                                </v-card>
-                                <v-card>
-                                    <p>Lorem.</p>
-                                </v-card>
-                                <v-card>
-                                    <p>Lorem.</p>
-                                </v-card>
-                            </div>
+                            <p class="small-page-title">
+                                Game Week 1 Top Predictor
+                            </p>
+                            <v-card elevation="0" class="top-predictor-card">
+                                <v-avatar
+                                    size="80"
+                                    class="top-predictor-avatar"
+                                >
+                                    <img
+                                        src="https://randomuser.me/api/portraits/men/99.jpg"
+                                        alt=""
+                                    />
+                                </v-avatar>
+                                <div>
+                                    <h3 class="top-predictor-name">
+                                        Aung Thu Hein
+                                    </h3>
+                                    <p class="mb-0 top-predictor-points">
+                                        114 Points
+                                    </p>
+                                    <p class="mb-0 top-predictor-details">
+                                        ManU | Yangon
+                                    </p>
+                                    <v-btn
+                                        class="primary view-leaderboard-btn"
+                                        small
+                                        >View Leaderboard</v-btn
+                                    >
+                                </div>
+                            </v-card>
+                        </div>
+                        <div class="mt-5">
+                            <p class="small-page-title">Game Week 2 Deadline</p>
+                            <v-card
+                                elevation="0"
+                                class="gameweek-deadline-card"
+                                color="primary"
+                            >
+                                <p class="text-center">
+                                    Don't miss your chance
+                                </p>
+                                <div class="gameweek-deadline-div">
+                                    <div
+                                        class="
+                                            d-flex
+                                            flex-column
+                                            justify-center
+                                            align-center
+                                        "
+                                    >
+                                        <h3>02</h3>
+                                        <p>Days</p>
+                                    </div>
+                                    <div
+                                        class="
+                                            d-flex
+                                            flex-column
+                                            justify-center
+                                            align-center
+                                        "
+                                    >
+                                        <h3>11</h3>
+                                        <p>Hours</p>
+                                    </div>
+                                    <div
+                                        class="
+                                            d-flex
+                                            flex-column
+                                            justify-center
+                                            align-center
+                                        "
+                                    >
+                                        <h3>31</h3>
+                                        <p>Mins</p>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-5">
+                                    <v-btn class="white predict-now-btn"
+                                        >Predict Now</v-btn
+                                    >
+                                </div>
+                            </v-card>
+                        </div>
+                        <div class="mt-5" style="margin-bottom: 80px">
+                            <v-carousel
+                                cycle
+                                height="150"
+                                interval="3000"
+                                hide-delimiters
+                                hide-delimiter-background
+                                show-arrows-on-hover
+                            >
+                                <v-carousel-item>
+                                    <v-sheet height="100%">
+                                        <v-row
+                                            class="fill-height"
+                                            align="center"
+                                            justify="center"
+                                        >
+                                            <v-img
+                                                src="https://dc6vmiz8c91pk.cloudfront.net/media/142/39541590099449/fpl_banner_v2.png"
+                                            >
+                                            </v-img>
+                                        </v-row>
+                                    </v-sheet>
+                                </v-carousel-item>
+                                <v-carousel-item>
+                                    <v-sheet height="100%">
+                                        <v-row
+                                            class="fill-height"
+                                            align="center"
+                                            justify="center"
+                                        >
+                                            <v-img
+                                                src="https://dc6vmiz8c91pk.cloudfront.net/media/142/39541590099449/fpl_banner_v2.png"
+                                            >
+                                            </v-img>
+                                        </v-row>
+                                    </v-sheet>
+                                </v-carousel-item>
+                                <v-carousel-item>
+                                    <v-sheet height="100%">
+                                        <v-row
+                                            class="fill-height"
+                                            align="center"
+                                            justify="center"
+                                        >
+                                            <v-img
+                                                src="https://dc6vmiz8c91pk.cloudfront.net/media/142/39541590099449/fpl_banner_v2.png"
+                                            >
+                                            </v-img>
+                                        </v-row>
+                                    </v-sheet>
+                                </v-carousel-item>
+                            </v-carousel>
                         </div>
                     </v-col>
                 </v-row>
             </v-container>
         </v-main>
-        <v-bottom-navigation :value="value" color="primary" grow>
-            <v-btn>
-                <span>Home</span>
-                <v-icon>mdi-home</v-icon>
-            </v-btn>
-            <v-btn>
-                <span>Tournament</span>
-                <v-icon>mdi-trophy</v-icon>
-            </v-btn>
-            <v-btn>
-                <span>Leaderboard</span>
-                <v-icon>mdi-podium-gold</v-icon>
-            </v-btn>
-            <v-btn>
-                <span>Setting</span>
-                <v-icon>mdi-menu</v-icon>
-            </v-btn>
-        </v-bottom-navigation>
+        <bottom-navigation></bottom-navigation>
     </v-app>
 </template>
-
 <script>
-import TopNav from "@/components/TopNav.vue";
+import BottomNavigation from "../components/BottomNavigation.vue";
+import TopNav from "../components/TopNav.vue";
+import RecentMatches from "../components/RecentMatches.vue";
 export default {
-    components: { TopNav },
-    data: () => ({
-        links: ["Dashboard", "Messages", "Profile", "Updates"],
-    }),
+    components: { TopNav, RecentMatches, BottomNavigation },
+    data: () => ({}),
 };
 </script>
 
@@ -151,12 +257,70 @@ export default {
     text-transform: capitalize;
 }
 
-.recent-matches-text {
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 0.2px;
+.top-predictor-card {
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
-.recent-matches-div {
+.top-predictor-avatar {
+    outline: 2px solid #4c2fe3;
+}
+
+.top-predictor-name {
+    font-size: 15px;
+}
+
+.top-predictor-points {
+    font-size: 13px;
+    font-weight: 500;
+}
+.top-predictor-details {
+    font-size: 13px;
+}
+
+.view-leaderboard-btn {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+.gameweek-deadline-card {
+    color: #fff !important;
+    padding: 20px;
+    background: rgb(76, 47, 227);
+    background: linear-gradient(
+        90deg,
+        rgba(76, 47, 227, 1) 0%,
+        rgba(58, 58, 226, 1) 56%,
+        rgba(115, 100, 246, 1) 100%
+    );
+}
+
+.gameweek-deadline-div {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.gameweek-deadline-div h3 {
+    font-size: 25px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.gameweek-deadline-div p {
+    margin-bottom: 0;
+    font-weight: 300;
+    font-size: 13px;
+}
+
+.predict-now-btn {
+    font-size: 20px;
+    font-weight: 500;
+    text-transform: capitalize;
+    letter-spacing: 0px;
+    color: #4c2fe3 !important;
 }
 </style>

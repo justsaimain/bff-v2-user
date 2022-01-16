@@ -1,17 +1,20 @@
 <template>
-    <v-app>
-        <v-main>
-            <router-view />
-        </v-main>
+    <v-app id="inspire">
+        <router-view />
     </v-app>
 </template>
 
 <script>
 export default {
     name: "App",
-
-    data: () => ({
-        //
-    }),
+    data: () => ({}),
 };
 </script>
+
+<style>
+.small-page-title {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+</style>
