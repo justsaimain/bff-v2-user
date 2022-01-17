@@ -14,7 +14,10 @@
                                     welcome-text
                                 "
                             >
-                                Welcome Sai Main !
+                                Welcome
+                                <span v-if="authenticated">
+                                    {{ user.name }}
+                                </span>
                             </p>
                             <v-card class="py-3 main-header-card" elevation="0">
                                 <p class="text-center main-header-title mb-2">
@@ -80,9 +83,7 @@
                                     <p class="mb-0 top-predictor-details">
                                         ManU | Yangon
                                     </p>
-                                    <v-btn
-                                        class="primary view-leaderboard-btn"
-                                        small
+                                    <v-btn class="primary view-leaderboard-btn"
                                         >View Leaderboard</v-btn
                                     >
                                 </div>
@@ -205,9 +206,16 @@ import BottomNavigation from "../components/BottomNavigation.vue";
 import TopNav from "../components/TopNav.vue";
 import RecentMatches from "../components/RecentMatches.vue";
 import axios from "axios";
+import { mapGetters } from "vuex";
 export default {
     components: { TopNav, RecentMatches, BottomNavigation },
     data: () => ({}),
+    computed: {
+        ...mapGetters({
+            authenticated: "auth/authenticated",
+            user: "auth/user",
+        }),
+    },
     mounted() {
         console.log("Mounted");
         axios
@@ -336,7 +344,7 @@ export default {
 }
 
 .predict-now-btn {
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 500;
     text-transform: capitalize;
     letter-spacing: 0px;

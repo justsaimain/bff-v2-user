@@ -15,10 +15,12 @@
                                 <v-text-field
                                     label="Phone Number"
                                     outlined
+                                    v-model="phone"
                                 ></v-text-field>
                                 <v-text-field
                                     label="Password"
                                     outlined
+                                    v-model="password"
                                 ></v-text-field>
                                 <v-btn class="mr-2" color="primary">
                                     Login
@@ -37,6 +39,14 @@
 <script>
 export default {
     components: {},
-    data: () => ({}),
+    data: () => ({
+        form: {
+            phone: "",
+            password: "",
+        },
+    }),
+    methods: {
+        login() {},
+    },
 };
 </script>
