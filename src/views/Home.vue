@@ -204,9 +204,27 @@
 import BottomNavigation from "../components/BottomNavigation.vue";
 import TopNav from "../components/TopNav.vue";
 import RecentMatches from "../components/RecentMatches.vue";
+import axios from "axios";
 export default {
     components: { TopNav, RecentMatches, BottomNavigation },
     data: () => ({}),
+    mounted() {
+        console.log("Mounted");
+        axios
+            .get("https://fantasy-premier-league3.p.rapidapi.com/data/types", {
+                headers: {
+                    "x-rapidapi-host": "fantasy-premier-league3.p.rapidapi.com",
+                    "x-rapidapi-key":
+                        "abe4621a9bmshbc1c9a211f870d6p157512jsnd3bbdf64de8b",
+                },
+            })
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    },
 };
 </script>
 
@@ -265,6 +283,7 @@ export default {
 }
 
 .top-predictor-avatar {
+    border-radius: 100% !important;
     outline: 2px solid #4c2fe3;
 }
 

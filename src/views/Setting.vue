@@ -13,19 +13,27 @@
                                 />
                             </v-avatar>
                             <div class="mt-10">
-                                <h3 class="profile-name">Aung Thu Hein</h3>
-                                <p class="mb-0 profile-detail">
-                                    Man Utd | 0997893487
-                                </p>
-                                <p class="mb-0 profile-detail">Yangon</p>
-                                <!-- <v-btn class="primary edit-profile-btn" small
-                                    >Edit Profile</v-btn
-                                > -->
+                                <template v-if="authenticated">
+                                    <h3 class="profile-name">
+                                        {{ user.name }}
+                                    </h3>
+                                    <p class="mb-0 profile-detail">
+                                        {{ user.fav_team }} | {{ user.phone }}
+                                    </p>
+                                    <p class="mb-0 profile-detail">
+                                        {{ user.region }}
+                                    </p>
+                                </template>
                                 <v-btn
+                                    v-if="authenticated"
+                                    class="primary edit-profile-btn"
+                                    >Edit Profile</v-btn
+                                >
+                                <v-btn
+                                    v-else
                                     to="/login"
                                     class="primary edit-profile-btn"
-                                    small
-                                    >Login</v-btn
+                                    >Login Account</v-btn
                                 >
                             </div>
                         </div>
@@ -79,7 +87,10 @@
                                         </v-list-item-title>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-list-item>
+                                <v-list-item
+                                    @click="logout"
+                                    v-if="authenticated"
+                                >
                                     <v-list-item-content>
                                         <v-list-item-title>
                                             <v-icon class="mr-3"
@@ -103,11 +114,30 @@
 <script>
 import BottomNavigation from "../components/BottomNavigation.vue";
 import TopNav from "../components/TopNav.vue";
+import { mapGetters, mapActions } from "vuex";
 export default {
     components: { TopNav, BottomNavigation },
     data: () => ({
         model: 1,
     }),
+    computed: {
+        ...mapGetters({
+            authenticated: "auth/authenticated",
+            user: "auth/user",
+        }),
+    },
+    methods: {
+        ...mapActions({
+            logoutAction: "auth/Logout",
+        }),
+        logout() {
+            this.logoutAction().then(() => {
+                this.$router.replace({
+                    name: "Home",
+                });
+            });
+        },
+    },
 };
 </script>
 
@@ -119,6 +149,7 @@ export default {
 
 .avatar {
     display: absolute;
+    border-radius: 100% !important;
     outline: 2px solid #fff;
     border: 3px solid #4c2fe3;
     top: 30px;

@@ -5,18 +5,22 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import axios from "axios";
-import VueLoading from "vuejs-loading-plugin";
-import { RotateSquare2 } from "vue-loading-spinner";
-
+require("vue-scrollto");
+require("./store/subscriber");
 Vue.config.productionTip = false;
-Vue.use(VueLoading, {
-    text: "Ladataan", // default 'Loading'
-    customLoader: RotateSquare2, // replaces the spinner and text with your own
+
+axios.defaults.baseURL = "https://backend.bffsports.com/api";
+
+axios.defaults.headers.common["x-rapidapi-host"] =
+    "fantasy-premier-league3.p.rapidapi.com";
+axios.defaults.headers.common["x-rapidapi-key"] =
+    "abe4621a9bmshbc1c9a211f870d6p157512jsnd3bbdf64de8b";
+
+store.dispatch("auth/attemptLogin", localStorage.getItem("token")).then(() => {
+    new Vue({
+        router,
+        store,
+        vuetify,
+        render: (h) => h(App),
+    }).$mount("#app");
 });
-axios.defaults.baseURL = "http://127.0.0.1:8000/api/";
-new Vue({
-    router,
-    store,
-    vuetify,
-    render: (h) => h(App),
-}).$mount("#app");

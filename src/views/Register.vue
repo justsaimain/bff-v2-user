@@ -1,6 +1,11 @@
 <template>
     <v-app id="inspire">
         <v-main class="grey lighten-3 my-auto">
+            <v-app-bar elevation="0" color="#eeeeee">
+                <v-btn icon @click="$router.go(-1)">
+                    <v-icon>mdi-arrow-left-thin</v-icon>
+                </v-btn>
+            </v-app-bar>
             <v-dialog v-model="loading" persistent width="100">
                 <v-card
                     class="d-flex justify-center align-center"
@@ -74,6 +79,7 @@
 </template>
 <script>
 import axios from "axios";
+import { mapActions } from "vuex";
 export default {
     mounted() {
         // this.$loading(true);
@@ -93,6 +99,9 @@ export default {
         },
     }),
     methods: {
+        ...mapActions({
+            storeOTP: "auth/storeOTP",
+        }),
         register() {
             this.loading = true;
             axios
@@ -100,38 +109,12 @@ export default {
                 .then((res) => {
                     let response = res.data;
                     if (response.flag === "verify_otp") {
-                        // request opt here
-                        let config = {
-                            headers: {
-                                "Content-Type":
-                                    "application/x-www-form-urlencoded; charset=UTF-8",
-                            },
-                            params: {
-                                "access-token":
-                                    process.env.VUE_APP_SMSPOH_TOKEN,
-                                number: response.data.phone,
-                                brand_name: "BFF Sports",
-                                code_length: 6,
-                                sender_name: "BFF Sports",
-                                template:
-                                    "{brand_name} အတွက် သင်၏အတည်ပြုရန်ကုဒ်နံပါတ်မှာ {code} ဖြစ်ပါတယ်",
-                            },
-                        };
-                        axios
-                            .get(
-                                "https://verify.smspoh.com/api/v1/request",
-                                {},
-                                config
-                            )
-                            .then((res) => {
-                                this.$router.replace({
-                                    name: "Verify",
-                                });
-                                console.log(res);
-                            })
-                            .catch((e) => {
-                                console.log(e);
-                            });
+                        if (response.extra.status == true) {
+                            this.storeOTP(response.extra);
+                        }
+                        this.$router.replace({
+                            name: "Verify",
+                        });
                     }
                     console.log(response);
                     this.loading = false;
