@@ -1,11 +1,6 @@
 <template>
     <v-app id="inspire">
         <v-main class="grey lighten-3 my-auto">
-            <v-app-bar elevation="0" color="#eeeeee">
-                <v-btn icon @click="$router.go(-1)">
-                    <v-icon>mdi-arrow-left-thin</v-icon>
-                </v-btn>
-            </v-app-bar>
             <v-dialog v-model="loading" persistent width="100">
                 <v-card
                     class="d-flex justify-center align-center"
@@ -22,6 +17,10 @@
             <v-container fill-height fluid>
                 <v-row align="center" justify="center" class="">
                     <v-col cols="12">
+                        <v-btn class="mx-5 mb-5" icon @click="$router.go(-1)">
+                            <v-icon>mdi-arrow-left-thin</v-icon>
+                            Go Back
+                        </v-btn>
                         <h3>Register</h3>
                         <v-form @submit.prevent="register">
                             <div class="mt-5">
