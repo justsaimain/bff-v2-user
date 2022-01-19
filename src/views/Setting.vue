@@ -133,7 +133,7 @@ export default {
         logout() {
             this.logoutAction().then(() => {
                 this.$router.replace({
-                    name: "Home",
+                    name: "Setting",
                 });
             });
         },

@@ -9,12 +9,12 @@ require("vue-scrollto");
 require("./store/subscriber");
 Vue.config.productionTip = false;
 
+// axios.defaults.baseURL = "https://backend.bffsports.com/api";
 axios.defaults.baseURL = "http://127.0.0.1:8000/api";
-
 axios.defaults.headers.common["x-rapidapi-host"] =
     "fantasy-premier-league3.p.rapidapi.com";
 axios.defaults.headers.common["x-rapidapi-key"] =
-    "abe4621a9bmshbc1c9a211f870d6p157512jsnd3bbdf64de8b";
+    "cea6ec2c46msh6647e81ef212a46p165485jsn0404abbd0d1c";
 
 store.dispatch("auth/attemptLogin", localStorage.getItem("token")).then(() => {
     new Vue({

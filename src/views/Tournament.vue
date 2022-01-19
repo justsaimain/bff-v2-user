@@ -46,7 +46,7 @@
                                     elevation="0"
                                     class="pa-5 text-center border"
                                 >
-                                    <h5>16 Feb, 2:30 PM</h5>
+                                    <h5>Time</h5>
                                     <div
                                         class="
                                             mt-5
@@ -67,8 +67,8 @@
                                             <v-avatar size="55" tile>
                                                 <img
                                                     :src="
-                                                        'https://resources.premierleague.com/premierleague/badges/50/t' +
-                                                        fixture.team_h +
+                                                        'https://resources.premierleague.com/premierleague/badges/70/t' +
+                                                        1 +
                                                         '.png'
                                                     "
                                                     @error="getDefaultTeamImage"
@@ -80,7 +80,7 @@
                                                     letter-spacing: 0.5px;
                                                 "
                                             >
-                                                {{ fixture.team_h }}
+                                                Home Team
                                             </span>
                                         </div>
                                         <div class="d-flex align-center">
@@ -102,8 +102,8 @@
                                             <v-avatar size="55" tile>
                                                 <img
                                                     :src="
-                                                        'https://resources.premierleague.com/premierleague/badges/50/t' +
-                                                        fixture.team_a +
+                                                        'https://resources.premierleague.com/premierleague/badges/70/t' +
+                                                        2 +
                                                         '.png'
                                                     "
                                                     @error="getDefaultTeamImage"
@@ -115,7 +115,7 @@
                                                     letter-spacing: 0.5px;
                                                 "
                                             >
-                                                {{ fixture.team_a }}
+                                                Away Team
                                             </span>
                                         </div>
                                     </div>
@@ -142,9 +142,16 @@ export default {
         totalGameWeek: 38,
         gameWeek: 22,
         fixtures: null,
+        fixturesCount: 0,
+        homeTeamArr: [],
+        awayTeamArr: [],
         attrs: {
             class: "mt-5",
             boilerplate: true,
+        },
+        fixtureData: {
+            homeData: null,
+            awayData: null,
         },
     }),
     methods: {
@@ -162,7 +169,6 @@ export default {
                     }
                 )
                 .then((res) => {
-                    console.log(res);
                     this.fixtures = res.data;
                     this.loading = false;
                 })
@@ -174,19 +180,15 @@ export default {
     },
     mounted() {
         this.loading = true;
+        console.log("loading fixtures data for gameweek");
         axios
             .get("https://fantasy-premier-league3.p.rapidapi.com/fixtures", {
                 params: { gw: this.gameWeek },
-                headers: {
-                    "x-rapidapi-host": "fantasy-premier-league3.p.rapidapi.com",
-                    "x-rapidapi-key":
-                        "abe4621a9bmshbc1c9a211f870d6p157512jsnd3bbdf64de8b",
-                },
             })
             .then((res) => {
-                console.log(res);
                 this.fixtures = res.data;
-                this.loading = false;
+                this.fixtureCount = res.data.length;
+                console.log("fixtures data for gameweek get");
 
                 setTimeout(() => {
                     var options = {

@@ -90,7 +90,7 @@ export default {
                         // success
                         localStorage.setItem("token", response.data.token);
                         this.attemptLogin(response.data.token);
-                        this.$router.replace({ name: "Home" });
+                        this.$router.replace({ name: "Setting" });
                     } else {
                         this.alertMessage = response.extra.message;
                         this.showAlert = true;
