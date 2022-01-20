@@ -19,8 +19,8 @@ Vue.config.productionTip = false;
 Vue.use(VueOffline);
 Vue.use(VsToast);
 
-// axios.defaults.baseURL = "https://backend.bffsports.com/api";
-axios.defaults.baseURL = "http://127.0.0.1:8000/api";
+axios.defaults.baseURL = "https://backend.bffsports.com/api";
+// axios.defaults.baseURL = "http://127.0.0.1:8000/api";
 axios.defaults.headers.common["x-rapidapi-host"] =
     "fantasy-premier-league3.p.rapidapi.com";
 axios.defaults.headers.common["x-rapidapi-key"] =

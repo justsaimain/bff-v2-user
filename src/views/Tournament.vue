@@ -30,35 +30,55 @@
                     </v-toolbar>
                 </v-card>
             </v-dialog>
-            <v-bottom-sheet v-model="predictionForm" persistent>
-                <v-sheet class="text-center" height="350">
+            <v-bottom-sheet v-model="predictionFormDialog" persistent>
+                <v-sheet
+                    style="border-radius: 30px 30px 0 0"
+                    class="text-center"
+                    height="350"
+                >
                     <div class="py-16">
-                        <v-row class="align-center justify-center px-5">
+                        <v-row
+                            v-if="predictionFormDialog"
+                            class="align-center justify-center px-5"
+                        >
+                            <!-- <p v-if="this.predictionForm.home_team_goal">
+                                {{ this.predictionForm.home_team_goal.value }}
+                            </p>
+                            <p v-if="this.predictionForm.away_team_goal">
+                                {{ this.predictionForm.away_team_goal.value }}
+                            </p> -->
+
                             <v-col class="text-center">
-                                <h5>Chelsea</h5>
+                                <h5>
+                                    {{ this.predictionForm.team_h.name }}
+                                </h5>
                             </v-col>
                             <v-col>
                                 <Picker
-                                    sensitivity="20"
-                                    radius="130"
-                                    itemHeight="40"
-                                    visibleOptionsAmount="5"
+                                    v-model="predictionForm.home_team_goal"
+                                    sensitivity.number="20"
+                                    radius.number="130"
+                                    itemHeight.number="40"
+                                    visibleOptionsAmount.number="5"
                                     :options="goalsNumber"
                                 >
                                 </Picker>
                             </v-col>
                             <v-col>
                                 <Picker
-                                    sensitivity="20"
-                                    radius="130"
-                                    itemHeight="40"
-                                    visibleOptionsAmount="5"
+                                    v-model="predictionForm.away_team_goal"
+                                    sensitivity.number="20"
+                                    radius.number="130"
+                                    itemHeight.number="40"
+                                    visibleOptionsAmount.number="5"
                                     :options="goalsNumber"
                                 >
                                 </Picker>
                             </v-col>
                             <v-col class="text-center">
-                                <h5>Chelsea</h5>
+                                <h5>
+                                    {{ this.predictionForm.team_a.name }}
+                                </h5>
                             </v-col>
                         </v-row>
                         <v-row class="">
@@ -78,11 +98,11 @@
                                     >Save</v-btn
                                 >
                                 <v-btn
-                                    @click="predictionForm = false"
+                                    @click="predictionFormDialog = false"
                                     elevation="0"
                                     outlined
                                     class="d-block"
-                                    color=""
+                                    color="primary"
                                     style="width: 150px"
                                     >Reset Goals</v-btn
                                 >
@@ -187,7 +207,9 @@
                                         <div v-else class="d-flex align-center">
                                             <div
                                                 class="goal-div"
-                                                @click="predictionForm = true"
+                                                @click="
+                                                    showPredictionForm(fixture)
+                                                "
                                             >
                                                 +
                                             </div>
@@ -195,7 +217,9 @@
                                                 VS
                                             </h5>
                                             <div
-                                                @click="predictionForm = true"
+                                                @click="
+                                                    showPredictionForm(fixture)
+                                                "
                                                 class="goal-div"
                                             >
                                                 +
@@ -235,6 +259,7 @@
                                         </div>
                                     </div>
                                     <v-btn
+                                        v-if="fixture.finished"
                                         @click="viewDetailDialog(fixture)"
                                         class="primary mt-5"
                                         small
@@ -265,14 +290,26 @@ export default {
         showDetailDialog: false,
         totalGameWeek: 38,
         detailFixture: null,
-        predictionForm: false,
-        gameWeek: 22,
+        predictionFormDialog: false,
+        gameWeek: 23,
         fixtures: null,
         attrs: {
             class: "mt-5",
             boilerplate: true,
         },
         goalsNumber: [],
+        predictionForm: {
+            code: null,
+            event: null,
+            finished: null,
+            finished_provisional: null,
+            id: null,
+            started: null,
+            team_a: null,
+            team_h: null,
+            home_team_goal: null,
+            away_team_goal: null,
+        },
     }),
     methods: {
         moment,
@@ -309,8 +346,21 @@ export default {
                 });
         },
         viewDetailDialog(fixture) {
+            console.log(fixture);
             this.showDetailDialog = true;
             this.detailFixture = fixture;
+        },
+        showPredictionForm(fixture) {
+            this.predictionForm.code = fixture.code;
+            this.predictionForm.event = fixture.event;
+            this.predictionForm.finished = fixture.finished;
+            this.predictionForm.finished_provisional =
+                fixture.finished_provisional;
+            this.predictionForm.id = fixture.id;
+            this.predictionForm.started = fixture.started;
+            this.predictionForm.team_a = fixture.team_a_detail[0];
+            this.predictionForm.team_h = fixture.team_h_detail[0];
+            this.predictionFormDialog = true;
         },
     },
     mounted() {
