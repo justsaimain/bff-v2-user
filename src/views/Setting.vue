@@ -4,16 +4,37 @@
         <v-main class="grey lighten-3 my-auto pt-10">
             <v-container>
                 <v-row class="primary main-header-div">
+                    <v-dialog v-model="logoutDialog" max-width="290">
+                        <v-card>
+                            <v-card-title class="">
+                                Are you sure?
+                            </v-card-title>
+                            <v-card-text
+                                >You will be logged out from your
+                                account.</v-card-text
+                            >
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    color="red darken-1"
+                                    text
+                                    @click="logout"
+                                >
+                                    Logout
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
                     <v-col cols="12">
                         <div class="text-center">
                             <v-avatar size="100" class="avatar">
                                 <img
-                                    src="https://randomuser.me/api/portraits/men/99.jpg"
+                                    :src="require('../assets/logo.jpg')"
                                     alt=""
                                 />
                             </v-avatar>
                             <div class="mt-10">
-                                <template v-if="authenticated">
+                                <template v-if="authenticated && user != null">
                                     <h3 class="profile-name">
                                         {{ user.name }}
                                     </h3>
@@ -88,7 +109,7 @@
                                     </v-list-item-content>
                                 </v-list-item>
                                 <v-list-item
-                                    @click="logout"
+                                    @click="logoutDialog = true"
                                     v-if="authenticated"
                                 >
                                     <v-list-item-content>
@@ -118,7 +139,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
     components: { TopNav, BottomNavigation },
     data: () => ({
-        model: 1,
+        logoutDialog: false,
     }),
     computed: {
         ...mapGetters({
@@ -132,9 +153,12 @@ export default {
         }),
         logout() {
             this.logoutAction().then(() => {
-                this.$router.replace({
-                    name: "Setting",
-                });
+                (this.logoutDialog = false),
+                    this.$router
+                        .replace({
+                            name: "Setting",
+                        })
+                        .catch(() => {});
             });
         },
     },

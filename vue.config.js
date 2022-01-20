@@ -1,5 +1,4 @@
 module.exports = {
-  transpileDependencies: [
-    'vuetify'
-  ]
-}
+    transpileDependencies: ["vuetify"],
+    plugins: [{ src: "~plugins/vs-toast", mode: "client" }],
+};
