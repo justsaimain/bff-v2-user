@@ -53,7 +53,6 @@ export default {
             axios
                 .get("auth/me")
                 .then((res) => {
-                    console.log(res);
                     commit("SET_USER", res.data.data);
                 })
                 .catch((e) => {

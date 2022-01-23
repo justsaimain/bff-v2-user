@@ -113,17 +113,19 @@
             </v-bottom-sheet>
             <v-container>
                 <v-row class="">
-                    <v-col cols="12">
+                    <v-col cols="12" v-if="this.getOptions != null">
                         <div class="gameweek-tabs">
                             <v-btn
-                                v-for="gameWeekTab in totalGameWeek"
+                                v-for="gameWeekTab in this.getOptions
+                                    .total_gameweek"
                                 :key="gameWeekTab"
                                 class="gameweek-tabs-btn"
                                 elevation="0"
                                 :class="[
                                     {
                                         'primary white--text':
-                                            gameWeekTab == gameWeek,
+                                            gameWeekTab ==
+                                            getOptions.current_gameweek,
                                     },
                                     `gw-tab-${gameWeekTab}`,
                                 ]"
@@ -142,7 +144,14 @@
                                     <h5>
                                         {{
                                             moment(fixture.kickoff_time).format(
-                                                "dddd D MMMM"
+                                                "dddd D MMMM "
+                                            )
+                                        }}
+                                    </h5>
+                                    <h5>
+                                        {{
+                                            moment(fixture.kickoff_time).format(
+                                                "h:mm A"
                                             )
                                         }}
                                     </h5>
@@ -204,7 +213,20 @@
                                                 {{ fixture.team_a_score }}
                                             </div>
                                         </div>
-                                        <div v-else class="d-flex align-center">
+                                        <div
+                                            v-else-if="fixture.started"
+                                            class="d-flex align-center"
+                                        >
+                                            <h4 class="primary--text">
+                                                Started
+                                            </h4>
+                                        </div>
+                                        <div
+                                            v-else-if="
+                                                checkPredictionAccept(fixture)
+                                            "
+                                            class="d-flex align-center"
+                                        >
                                             <div
                                                 class="goal-div"
                                                 @click="
@@ -224,6 +246,11 @@
                                             >
                                                 +
                                             </div>
+                                        </div>
+                                        <div v-else class="d-flex align-center">
+                                            <h4 class="primary--text">
+                                                Prediction Close
+                                            </h4>
                                         </div>
                                         <div
                                             class="
@@ -280,7 +307,7 @@ import axios from "axios";
 import BottomNavigation from "../components/BottomNavigation.vue";
 import TopNav from "../components/TopNav.vue";
 var GameWeekTabScrollTo = require("vue-scrollto");
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import moment from "moment";
 import Picker from "vue-wheel-picker";
 export default {
@@ -288,15 +315,10 @@ export default {
     data: () => ({
         loading: true,
         showDetailDialog: false,
-        totalGameWeek: 38,
         detailFixture: null,
+        gameWeek: 2,
         predictionFormDialog: false,
-        gameWeek: 23,
         fixtures: null,
-        attrs: {
-            class: "mt-5",
-            boilerplate: true,
-        },
         goalsNumber: [],
         predictionForm: {
             code: null,
@@ -311,8 +333,20 @@ export default {
             away_team_goal: null,
         },
     }),
+    computed: {
+        ...mapGetters({
+            teams: "teams/teams",
+            alert: "general/getAlert",
+            getOptions: "options/getOptions",
+        }),
+    },
     methods: {
         moment,
+        ...mapActions({
+            showAlert: "general/showAlert",
+            hideAlert: "general/hideAlert",
+            storeOption: "options/storeOption",
+        }),
         getDefaultTeamImage(e) {
             e.target.src = "https://singlecolorimage.com/get/EEEEEE/55x55";
         },
@@ -328,6 +362,7 @@ export default {
                 )
                 .then((res) => {
                     this.fixtures = res.data;
+                    console.log(this.fixtures);
                     this.fixtures.forEach((fix) => {
                         fix.team_a_detail = this.teams.filter(
                             (team) => team.id == fix.team_a
@@ -362,6 +397,13 @@ export default {
             this.predictionForm.team_h = fixture.team_h_detail[0];
             this.predictionFormDialog = true;
         },
+        checkPredictionAccept(fixture) {
+            const checkTime = moment(fixture.kickoff_time)
+                .subtract(30, "minutes")
+                .format("YYYY-MM-D HH:mm");
+            const nowTime = moment().format("YYYY-MM-D HH:mm");
+            return moment(nowTime).isBefore(checkTime);
+        },
     },
     mounted() {
         for (let i = 0; i < 21; i++) {
@@ -371,26 +413,23 @@ export default {
             });
         }
 
-        this.loading = true;
+        console.log(this.getOptions.current_gameweek);
+
         axios
             .get("https://fantasy-premier-league3.p.rapidapi.com/fixtures", {
-                params: { gw: this.gameWeek },
+                params: { gw: this.getOptions.current_gameweek },
             })
             .then((res) => {
                 this.fixtures = res.data;
-                this.loading = false;
+
                 this.fixtures.forEach((fix) => {
                     fix.team_a_detail = this.teams.filter(
                         (team) => team.id == fix.team_a
                     );
-
                     fix.team_h_detail = this.teams.filter(
                         (team) => team.id == fix.team_h
                     );
                 });
-
-                this.loading = false;
-
                 setTimeout(() => {
                     var options = {
                         container: ".gameweek-tabs",
@@ -400,24 +439,23 @@ export default {
                         x: true,
                         y: false,
                     };
-
                     GameWeekTabScrollTo.scrollTo(
-                        `.gw-tab-${this.gameWeek}`,
+                        `.gw-tab-${this.getOptions.current_gameweek}`,
                         3000,
                         options
                     );
                 });
+                this.loading = false;
             })
             .catch((e) => {
                 this.loading = false;
-                alert("something was wrong");
+                this.showAlert({
+                    title: "Opp! Sorry",
+                    body: "Unable to fetch fixtures data.",
+                    close: true,
+                });
                 console.log(e);
             });
-    },
-    computed: {
-        ...mapGetters({
-            teams: "teams/teams",
-        }),
     },
 };
 </script>
