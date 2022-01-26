@@ -19,24 +19,27 @@ Vue.config.productionTip = false;
 Vue.use(VueOffline);
 Vue.use(VsToast);
 
-// axios.defaults.baseURL = "https://backend.bffsports.com/api";
-axios.defaults.baseURL = "http://127.0.0.1:8000/api";
+axios.defaults.baseURL = "https://backend.bffsports.com/api";
+// axios.defaults.baseURL = "http://127.0.0.1:8000/api";
 axios.defaults.headers.common["x-rapidapi-host"] =
-    "fantasy-premier-league3.p.rapidapi.com";
+  "fantasy-premier-league3.p.rapidapi.com";
 axios.defaults.headers.common["x-rapidapi-key"] =
-    "abe4621a9bmshbc1c9a211f870d6p157512jsnd3bbdf64de8b";
+  "abe4621a9bmshbc1c9a211f870d6p157512jsnd3bbdf64de8b";
 
 window.onbeforeunload = null;
 
 window.addEventListener("offline", function () {
-    alert("You are offline");
+  alert("You are offline");
 });
 
+store.dispatch("options/storeOption");
+store.dispatch("teams/getTeams");
+
 store.dispatch("auth/attemptLogin", localStorage.getItem("token")).then(() => {
-    new Vue({
-        router,
-        store,
-        vuetify,
-        render: (h) => h(App),
-    }).$mount("#app");
+  new Vue({
+    router,
+    store,
+    vuetify,
+    render: (h) => h(App),
+  }).$mount("#app");
 });
