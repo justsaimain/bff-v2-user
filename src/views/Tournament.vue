@@ -83,6 +83,9 @@
           </div>
         </v-sheet>
       </v-bottom-sheet>
+      <v-snackbar v-model="successPredicted">
+        Successfully Predicted
+      </v-snackbar>
       <v-container>
         <v-row class="">
           <v-col cols="12">
@@ -234,6 +237,7 @@ export default {
     goalsNumber: [],
     fixtureScrollTo: null,
     predictionFormDialog: false,
+    successPredicted: false,
     predictionForm: {
       event: null,
       id: null,
@@ -350,6 +354,10 @@ export default {
       if (!this.authenticated) {
         this.showNoAuthAlert();
       } else {
+        if (fixture.prediction != null) {
+          this.predictionForm.home_team_goal = fixture.prediction.team_h_goal;
+          this.predictionForm.away_team_goal = fixture.prediction.team_a_goal;
+        }
         this.predictionForm.team_a = fixture.team_a;
         this.predictionForm.team_h = fixture.team_h;
         this.predictionForm.event = fixture.event;
@@ -361,6 +369,7 @@ export default {
       axios
         .post("/prediction", this.predictionForm)
         .then(() => {
+          this.successPredicted = true;
           this.reloadGameWeek(this.predictionForm.event);
           this.predictionFormDialog = false;
           this.predictionForm.event = null;
