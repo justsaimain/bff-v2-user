@@ -1,6 +1,7 @@
 export default {
   namespaced: true,
   state: {
+    noAuthAlert: false,
     alert: {
       show: false,
       title: null,
@@ -15,8 +16,17 @@ export default {
     getAlert(state) {
       return state.alert;
     },
+    noAuthAlert(state) {
+      return state.noAuthAlert;
+    },
   },
   mutations: {
+    SHOW_NO_AUTH_ALERT(state) {
+      state.noAuthAlert = true;
+    },
+    HIDE_NO_AUTH_ALERT(state) {
+      state.noAuthAlert = false;
+    },
     SHOW_ALERT(state, data) {
       state.alert.title = data.title;
       state.alert.body = data.body;
@@ -44,6 +54,12 @@ export default {
     },
     hideAlert({ commit }) {
       commit("HIDE_ALERT");
+    },
+    showNoAuthAlert({ commit }) {
+      commit("SHOW_NO_AUTH_ALERT");
+    },
+    hideNoAuthAlert({ commit }) {
+      commit("HIDE_NO_AUTH_ALERT");
     },
   },
   modules: {},

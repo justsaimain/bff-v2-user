@@ -15,7 +15,7 @@
           ></v-progress-circular
         ></v-card>
       </v-dialog>
-      <v-bottom-sheet v-model="predictionFormDialog" persistent>
+      <v-bottom-sheet v-model="predictionFormDialog">
         <v-sheet
           style="border-radius: 30px 30px 0 0"
           class="text-center"
@@ -239,8 +239,16 @@ export default {
       id: null,
       team_a: null,
       team_h: null,
-      home_team_goal: null,
-      away_team_goal: null,
+      home_team_goal: {
+        text: 0,
+        value: 0,
+        visibility: true,
+      },
+      away_team_goal: {
+        text: 0,
+        value: 0,
+        visibility: true,
+      },
     },
   }),
   computed: {
@@ -254,6 +262,7 @@ export default {
     ...mapActions({
       showAlert: "general/showAlert",
       hideAlert: "general/hideAlert",
+      showNoAuthAlert: "general/showNoAuthAlert",
     }),
     scrollToElement(options) {
       const el = this.$el.getElementsByClassName("fixture-card-236")[0];
@@ -275,7 +284,6 @@ export default {
       axios
         .get("/fixtures", { params: { gw: this.gameWeek } })
         .then((res) => {
-          console.log(res);
           this.fixtures = res.data;
 
           setTimeout(() => {
@@ -340,14 +348,7 @@ export default {
     },
     showPredictionForm(fixture) {
       if (!this.authenticated) {
-        this.showAlert({
-          title: "Unauthenticated",
-          body: "You need to login before Predict",
-          close: true,
-          action: "url",
-          url_path: "/login",
-          url_title: "Login",
-        });
+        this.showNoAuthAlert();
       } else {
         this.predictionForm.team_a = fixture.team_a;
         this.predictionForm.team_h = fixture.team_h;
@@ -357,19 +358,17 @@ export default {
       }
     },
     submitPredictionForm() {
-      this.fixtureScrollTo = this.predictionForm.id;
       axios
         .post("/prediction", this.predictionForm)
         .then(() => {
           this.reloadGameWeek(this.predictionForm.event);
+          this.predictionFormDialog = false;
           this.predictionForm.event = null;
           this.predictionForm.id = null;
           this.predictionForm.team_a = null;
           this.predictionForm.team_h = null;
           this.predictionForm.home_team_goal = null;
           this.predictionForm.away_team_goal = null;
-
-          this.predictionFormDialog = false;
         })
         .catch((e) => {
           console.log(e);

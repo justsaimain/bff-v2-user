@@ -59,6 +59,19 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="noAuthAlert" persistent max-width="290">
+      <v-card>
+        <v-card-title class=""> Unauthenticated </v-card-title>
+        <v-card-text>You need to Login first to use this feature.</v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" text @click="goToRoute('/login')">
+            Login
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="" text @click="hideNoAuthAlert"> Close </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <router-view />
     <!-- <vue-progress-bar></vue-progress-bar> -->
   </v-app>
@@ -71,6 +84,7 @@ export default {
   computed: {
     ...mapGetters({
       alert: "general/getAlert",
+      noAuthAlert: "general/noAuthAlert",
       teams: "teams/teams",
       options: "options/getOptions",
     }),
@@ -83,13 +97,14 @@ export default {
     this.getTeams();
     this.storeOption();
     this.$Progress.finish();
-    console.log(this.alert);
   },
   methods: {
     ...mapActions({
       storeOption: "options/storeOption",
       getTeams: "teams/getTeams",
       hideAlert: "general/hideAlert",
+      showNoAuthAlert: "general/showNoAuthAlert",
+      hideNoAuthAlert: "general/hideNoAuthAlert",
     }),
     reloadPage() {
       window.location.reload();
@@ -101,7 +116,7 @@ export default {
       window.location.href = "/";
     },
     goToRoute(path) {
-      this.hideAlert();
+      this.hideNoAuthAlert();
       this.$router.push({
         path: path,
       });
