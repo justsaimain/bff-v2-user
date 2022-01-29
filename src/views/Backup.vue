@@ -15,6 +15,21 @@
           ></v-progress-circular
         ></v-card>
       </v-dialog>
+      <v-dialog
+        v-model="showDetailDialog"
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+      >
+        <v-card>
+          <v-toolbar dark color="primary">
+            <v-btn icon dark @click="showDetailDialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-toolbar-title>Fixture Details</v-toolbar-title>
+          </v-toolbar>
+        </v-card>
+      </v-dialog>
       <v-bottom-sheet v-model="predictionFormDialog" persistent>
         <v-sheet
           style="border-radius: 30px 30px 0 0"
@@ -84,7 +99,7 @@
         </v-sheet>
       </v-bottom-sheet>
       <v-container>
-        <v-row class="">
+        <v-row class="" :key="rowKey">
           <v-col cols="12">
             <div class="gameweek-tabs">
               <v-btn
@@ -121,14 +136,14 @@
                         <img
                           :src="
                             'https://resources.premierleague.com/premierleague/badges/70/t' +
-                            fixture.team_h.code +
+                            fixture.team_h_detail[0].code +
                             '.png'
                           "
                           @error="getDefaultTeamImage"
                         />
                       </v-avatar>
                       <span style="font-size: 13px; letter-spacing: 0.5px">
-                        {{ fixture.team_h.name }}
+                        {{ fixture.team_h_detail[0].name }}
                       </span>
                     </div>
                     <div
@@ -157,8 +172,20 @@
                         class="goal-div"
                         @click="showPredictionForm(fixture)"
                       >
-                        <span v-if="fixture.prediction">
-                          {{ fixture.prediction.team_h_goal.text }}
+                        <span
+                          v-if="
+                            checkFixtureInPredictionList(
+                              predictionList,
+                              fixture.id
+                            )
+                          "
+                        >
+                          {{
+                            checkFixtureInPredictionList(
+                              predictionList,
+                              fixture.id
+                            ).team_h_goal.value
+                          }}
                         </span>
                         <span v-else> + </span>
                       </div>
@@ -167,8 +194,20 @@
                         @click="showPredictionForm(fixture)"
                         class="goal-div"
                       >
-                        <span v-if="fixture.prediction">
-                          {{ fixture.prediction.team_a_goal.text }}
+                        <span
+                          v-if="
+                            checkFixtureInPredictionList(
+                              predictionList,
+                              fixture.id
+                            )
+                          "
+                        >
+                          {{
+                            checkFixtureInPredictionList(
+                              predictionList,
+                              fixture.id
+                            ).team_a_goal.value
+                          }}
                         </span>
                         <span v-else> + </span>
                       </div>
@@ -183,18 +222,22 @@
                         <img
                           :src="
                             'https://resources.premierleague.com/premierleague/badges/70/t' +
-                            fixture.team_a.code +
+                            fixture.team_a_detail[0].code +
                             '.png'
                           "
                           @error="getDefaultTeamImage"
                         />
                       </v-avatar>
                       <span style="font-size: 13px; letter-spacing: 0.5px">
-                        {{ fixture.team_a.name }}
+                        {{ fixture.team_a_detail[0].name }}
                       </span>
                     </div>
                   </div>
-                  <v-btn v-if="fixture.finished" class="primary mt-5" small
+                  <v-btn
+                    v-if="fixture.finished"
+                    @click="viewDetailDialog(fixture)"
+                    class="primary mt-5"
+                    small
                     >View Details</v-btn
                   >
                 </v-card>
@@ -218,12 +261,17 @@ import Picker from "vue-wheel-picker";
 export default {
   components: { TopNav, BottomNavigation, Picker },
   data: () => ({
+    rowKey: 0,
+    teams: null,
     loading: true,
+    showDetailDialog: false,
+    detailFixture: null,
     totalGameWeek: 0,
     gameWeek: 0,
+    predictionFormDialog: false,
     fixtures: null,
     goalsNumber: [],
-    predictionFormDialog: false,
+    predictionList: null,
     predictionForm: {
       event: null,
       id: null,
@@ -243,53 +291,33 @@ export default {
     ...mapActions({
       showAlert: "general/showAlert",
       hideAlert: "general/hideAlert",
+      storeOption: "options/storeOption",
+      getTeams: "teams/getTeams",
     }),
     getDefaultTeamImage(e) {
       e.target.src = "https://singlecolorimage.com/get/EEEEEE/55x55";
-    },
-    getFixturesMounted() {
-      this.totalGameWeek = JSON.parse(
-        localStorage.getItem("options")
-      ).total_gameweek;
-      this.gameWeek = JSON.parse(
-        localStorage.getItem("options")
-      ).current_gameweek;
-
-      axios
-        .get("/fixtures", { params: { gw: this.gameWeek } })
-        .then((res) => {
-          console.log(res);
-          this.fixtures = res.data;
-
-          setTimeout(() => {
-            var options = {
-              container: ".gameweek-tabs",
-              easing: "ease",
-              force: true,
-              offset: 0,
-              x: true,
-              y: false,
-            };
-            GameWeekTabScrollTo.scrollTo(
-              `.gw-tab-${this.gameWeek}`,
-              3000,
-              options
-            );
-          });
-          this.loading = false;
-        })
-        .catch((e) => {
-          console.log(e);
-          this.loading = false;
-        });
     },
     reloadGameWeek(gw) {
       this.loading = true;
       this.gameWeek = gw;
       axios
-        .get("/fixtures", { params: { gw: this.gameWeek } })
+        .get("https://fantasy-premier-league3.p.rapidapi.com/fixtures", {
+          params: { gw: this.gameWeek },
+        })
         .then((res) => {
           this.fixtures = res.data;
+
+          this.fixtures.forEach((fix) => {
+            fix.team_a_detail = this.teams.filter(
+              (team) => team.id == fix.team_a
+            );
+
+            fix.team_h_detail = this.teams.filter(
+              (team) => team.id == fix.team_h
+            );
+          });
+
+          this.getPredictionList(this.gameWeek);
 
           setTimeout(() => {
             var options = {
@@ -310,6 +338,45 @@ export default {
         })
         .catch((e) => {
           this.loading = false;
+          console.log(e);
+        });
+    },
+    viewDetailDialog(fixture) {
+      console.log(fixture);
+      this.showDetailDialog = true;
+      this.detailFixture = fixture;
+    },
+    showPredictionForm(fixture) {
+      this.getPredictionList(fixture.event);
+      const checkPrediction = this.checkFixtureInPredictionList(
+        this.predictionList,
+        fixture.id
+      );
+      if (checkPrediction) {
+        this.predictionForm.away_team_goal = checkPrediction.team_a_goal;
+        this.predictionForm.home_team_goal = checkPrediction.team_h_goal;
+      }
+      this.predictionForm.team_a = fixture.team_a_detail[0];
+      this.predictionForm.team_h = fixture.team_h_detail[0];
+      this.predictionForm.event = fixture.event;
+      this.predictionForm.id = fixture.id;
+      this.predictionFormDialog = true;
+    },
+    submitPredictionForm() {
+      this.predictionFormDialog = false;
+      axios
+        .post("/prediction", this.predictionForm)
+        .then(() => {
+          this.predictionForm.event = null;
+          this.predictionForm.id = null;
+          this.predictionForm.team_a = null;
+          this.predictionForm.team_h = null;
+          this.predictionForm.home_team_goal = null;
+          this.predictionForm.away_team_goal = null;
+          this.rowKey++;
+          window.location.reload();
+        })
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -320,30 +387,25 @@ export default {
       const nowTime = moment().format("YYYY-MM-D HH:mm");
       return moment(nowTime).isBefore(checkTime);
     },
-    showPredictionForm(fixture) {
-      this.predictionForm.team_a = fixture.team_a;
-      this.predictionForm.team_h = fixture.team_h;
-      this.predictionForm.event = fixture.event;
-      this.predictionForm.id = fixture.id;
-      this.predictionFormDialog = true;
-    },
-    submitPredictionForm() {
+    getPredictionList(gw) {
       axios
-        .post("/prediction", this.predictionForm)
+        .get("/prediction", { params: { gw: gw } })
         .then((res) => {
           console.log(res);
-          this.reloadGameWeek(this.predictionForm.event);
-          this.predictionForm.event = null;
-          this.predictionForm.id = null;
-          this.predictionForm.team_a = null;
-          this.predictionForm.team_h = null;
-          this.predictionForm.home_team_goal = null;
-          this.predictionForm.away_team_goal = null;
-          this.predictionFormDialog = false;
+          this.predictionList = res.data.data;
         })
         .catch((e) => {
           console.log(e);
         });
+    },
+    checkFixtureInPredictionList(list, fixture_id) {
+      if (list) {
+        const found = list.find((el) => el.fixture_id == fixture_id);
+        if (found) {
+          return found;
+        }
+        return false;
+      }
     },
   },
   mounted() {
@@ -353,7 +415,54 @@ export default {
         text: i,
       });
     }
-    this.getFixturesMounted();
+
+    this.totalGameWeek = JSON.parse(
+      localStorage.getItem("options")
+    ).total_gameweek;
+    this.gameWeek = JSON.parse(
+      localStorage.getItem("options")
+    ).current_gameweek;
+    this.teams = JSON.parse(localStorage.getItem("teams"));
+
+    axios
+      .get("https://fantasy-premier-league3.p.rapidapi.com/fixtures", {
+        params: { gw: this.gameWeek },
+      })
+      .then((res) => {
+        console.log(res);
+        this.fixtures = res.data;
+        this.fixtures.forEach((fix) => {
+          fix.team_a_detail = this.teams.filter(
+            (team) => team.id == fix.team_a
+          );
+          fix.team_h_detail = this.teams.filter(
+            (team) => team.id == fix.team_h
+          );
+        });
+        this.getPredictionList(this.gameWeek);
+        setTimeout(() => {
+          var options = {
+            container: ".gameweek-tabs",
+            easing: "ease",
+            force: true,
+            offset: 0,
+            x: true,
+            y: false,
+          };
+          GameWeekTabScrollTo.scrollTo(`.gw-tab-${this.gameWeek}`, 6, options);
+        });
+        this.loading = false;
+      })
+      .catch((e) => {
+        this.loading = false;
+        this.showAlert({
+          title: "Opp! Sorry",
+          body: "Unable to fetch fixtures data.",
+          close: true,
+          action: "go_home",
+        });
+        console.log(e);
+      });
   },
 };
 </script>

@@ -19,6 +19,7 @@
         </v-card-title>
         <v-card-text>{{ alert.body }}</v-card-text>
         <v-card-actions>
+          <v-spacer v-if="!alert.close"></v-spacer>
           <v-btn
             v-if="alert.action == 'reload'"
             color="primary"
@@ -27,7 +28,23 @@
           >
             Reload
           </v-btn>
-          <v-spacer></v-spacer>
+          <v-btn
+            v-else-if="alert.action == 'go_back'"
+            color="primary"
+            text
+            @click="goBack"
+          >
+            Go Back
+          </v-btn>
+          <v-btn
+            v-else-if="alert.action == 'go_home'"
+            color="primary"
+            text
+            @click="goHome"
+          >
+            Go Home
+          </v-btn>
+          <v-spacer v-if="alert.close"></v-spacer>
           <v-btn v-if="alert.close" color="" text @click="this.hideAlert">
             Close
           </v-btn>
@@ -35,6 +52,7 @@
       </v-card>
     </v-dialog>
     <router-view />
+    <!-- <vue-progress-bar></vue-progress-bar> -->
   </v-app>
 </template>
 
@@ -56,6 +74,7 @@ export default {
   mounted() {
     this.getTeams();
     this.storeOption();
+    this.$Progress.finish();
   },
   methods: {
     ...mapActions({
@@ -66,6 +85,16 @@ export default {
     reloadPage() {
       window.location.reload();
     },
+    goBack() {
+      history.go(-1);
+    },
+    goHome() {
+      window.location.href = "/";
+    },
+  },
+  created() {
+    //  [App.vue specific] When App.vue is first loaded start the progress bar
+    this.$Progress.start();
   },
 };
 </script>

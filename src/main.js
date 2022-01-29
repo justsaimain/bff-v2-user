@@ -7,7 +7,7 @@ import vuetify from "./plugins/vuetify";
 import axios from "axios";
 import VueOffline from "vue-offline";
 import VsToast from "@vuesimple/vs-toast";
-
+import VueProgressBar from "vue-progressbar";
 import VueScrollPicker from "vue-scroll-picker";
 
 Vue.use(VueScrollPicker);
@@ -18,6 +18,22 @@ require("./store/subscriber");
 Vue.config.productionTip = false;
 Vue.use(VueOffline);
 Vue.use(VsToast);
+
+const options = {
+  color: "#4c2fe3",
+  failedColor: "#874b4b",
+  thickness: "5px",
+  transition: {
+    speed: "1s",
+    opacity: "0.6s",
+    termination: 1000,
+  },
+  autoRevert: true,
+  location: "top",
+  inverse: false,
+};
+
+Vue.use(VueProgressBar, options);
 
 axios.defaults.baseURL = "https://backend.bffsports.com/api";
 // axios.defaults.baseURL = "http://127.0.0.1:8000/api";
