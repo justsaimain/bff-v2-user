@@ -44,6 +44,14 @@
           >
             Go Home
           </v-btn>
+          <v-btn
+            v-else-if="alert.action == 'url'"
+            color="primary"
+            text
+            @click="goToRoute(alert.url_path)"
+          >
+            {{ alert.url_title }}
+          </v-btn>
           <v-spacer v-if="alert.close"></v-spacer>
           <v-btn v-if="alert.close" color="" text @click="this.hideAlert">
             Close
@@ -75,6 +83,7 @@ export default {
     this.getTeams();
     this.storeOption();
     this.$Progress.finish();
+    console.log(this.alert);
   },
   methods: {
     ...mapActions({
@@ -90,6 +99,12 @@ export default {
     },
     goHome() {
       window.location.href = "/";
+    },
+    goToRoute(path) {
+      this.hideAlert();
+      this.$router.push({
+        path: path,
+      });
     },
   },
   created() {

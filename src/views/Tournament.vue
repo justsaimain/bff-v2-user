@@ -104,8 +104,17 @@
                 Game Week {{ gameWeekTab }}
               </v-btn>
             </div>
-            <div v-if="!loading" style="margin-bottom: 80px">
-              <div v-for="fixture in fixtures" :key="fixture.code" class="mt-5">
+            <div
+              v-if="!loading"
+              class="fixtures-container"
+              style="margin-bottom: 80px"
+            >
+              <div
+                v-for="fixture in fixtures"
+                :key="fixture.code"
+                :class="[`fixture-card-${fixture.id}`]"
+                class="mt-5"
+              >
                 <v-card elevation="0" class="pa-5 text-center">
                   <h5>
                     {{ moment(fixture.kickoff_time).format("dddd D MMMM ") }}
@@ -223,6 +232,7 @@ export default {
     gameWeek: 0,
     fixtures: null,
     goalsNumber: [],
+    fixtureScrollTo: null,
     predictionFormDialog: false,
     predictionForm: {
       event: null,
@@ -236,6 +246,7 @@ export default {
   computed: {
     ...mapGetters({
       alert: "general/getAlert",
+      authenticated: "auth/authenticated",
     }),
   },
   methods: {
@@ -244,6 +255,12 @@ export default {
       showAlert: "general/showAlert",
       hideAlert: "general/hideAlert",
     }),
+    scrollToElement(options) {
+      const el = this.$el.getElementsByClassName("fixture-card-236")[0];
+      if (el) {
+        el.scrollIntoView(options);
+      }
+    },
     getDefaultTeamImage(e) {
       e.target.src = "https://singlecolorimage.com/get/EEEEEE/55x55";
     },
@@ -276,6 +293,7 @@ export default {
               options
             );
           });
+
           this.loading = false;
         })
         .catch((e) => {
@@ -321,17 +339,28 @@ export default {
       return moment(nowTime).isBefore(checkTime);
     },
     showPredictionForm(fixture) {
-      this.predictionForm.team_a = fixture.team_a;
-      this.predictionForm.team_h = fixture.team_h;
-      this.predictionForm.event = fixture.event;
-      this.predictionForm.id = fixture.id;
-      this.predictionFormDialog = true;
+      if (!this.authenticated) {
+        this.showAlert({
+          title: "Unauthenticated",
+          body: "You need to login before Predict",
+          close: true,
+          action: "url",
+          url_path: "/login",
+          url_title: "Login",
+        });
+      } else {
+        this.predictionForm.team_a = fixture.team_a;
+        this.predictionForm.team_h = fixture.team_h;
+        this.predictionForm.event = fixture.event;
+        this.predictionForm.id = fixture.id;
+        this.predictionFormDialog = true;
+      }
     },
     submitPredictionForm() {
+      this.fixtureScrollTo = this.predictionForm.id;
       axios
         .post("/prediction", this.predictionForm)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.reloadGameWeek(this.predictionForm.event);
           this.predictionForm.event = null;
           this.predictionForm.id = null;
@@ -339,6 +368,7 @@ export default {
           this.predictionForm.team_h = null;
           this.predictionForm.home_team_goal = null;
           this.predictionForm.away_team_goal = null;
+
           this.predictionFormDialog = false;
         })
         .catch((e) => {
