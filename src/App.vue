@@ -86,7 +86,6 @@ export default {
       alert: "general/getAlert",
       noAuthAlert: "general/noAuthAlert",
       teams: "teams/teams",
-      options: "options/getOptions",
     }),
   },
   component: {},
@@ -94,14 +93,10 @@ export default {
     isOffline: false,
   }),
   mounted() {
-    this.getTeams();
-    this.storeOption();
     this.$Progress.finish();
   },
   methods: {
     ...mapActions({
-      storeOption: "options/storeOption",
-      getTeams: "teams/getTeams",
       hideAlert: "general/hideAlert",
       showNoAuthAlert: "general/showNoAuthAlert",
       hideNoAuthAlert: "general/hideNoAuthAlert",

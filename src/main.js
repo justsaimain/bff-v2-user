@@ -34,9 +34,8 @@ const options = {
 };
 
 Vue.use(VueProgressBar, options);
-
-// axios.defaults.baseURL = "https://backend.bffsports.com/api";
-axios.defaults.baseURL = "http://127.0.0.1:8000/api";
+axios.defaults.baseURL = "https://backend.bffsports.com/api";
+// axios.defaults.baseURL = "http://127.0.0.1:8000/api";
 axios.defaults.headers.common["x-rapidapi-host"] =
   "fantasy-premier-league3.p.rapidapi.com";
 axios.defaults.headers.common["x-rapidapi-key"] =
@@ -48,10 +47,11 @@ window.addEventListener("offline", function () {
   alert("You are offline");
 });
 
-store.dispatch("options/storeOption");
-store.dispatch("teams/getTeams");
-
-store.dispatch("auth/attemptLogin", localStorage.getItem("token")).then(() => {
+Promise.all([
+  store.dispatch("options/storeOption"),
+  store.dispatch("teams/getTeams"),
+  store.dispatch("auth/attemptLogin", localStorage.getItem("token")),
+]).finally(() => {
   new Vue({
     router,
     store,

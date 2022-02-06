@@ -21,7 +21,7 @@
           class="text-center"
           height="350"
         >
-          <div class="py-16">
+          <div class="py-8">
             <v-row
               v-if="predictionFormDialog"
               class="align-center justify-center px-5"
@@ -59,25 +59,32 @@
                 </h5>
               </v-col>
             </v-row>
+
             <v-row class="">
               <v-col class="d-flex flex-column justify-center align-center">
-                <v-btn
-                  elevation="0"
-                  class="d-block mb-3"
-                  color="primary"
-                  @click.prevent="submitPredictionForm"
-                  style="width: 150px"
-                  >Save</v-btn
-                >
-                <v-btn
-                  @click="predictionFormDialog = false"
-                  elevation="0"
-                  outlined
-                  class="d-block"
-                  color="primary"
-                  style="width: 150px"
-                  >Reset Goals</v-btn
-                >
+                <v-checkbox
+                  v-model="predictionForm.twox_booster"
+                  :label="`Use 2x Booster`"
+                  color="#4c2fe3"
+                ></v-checkbox>
+                <div class="d-flex">
+                  <v-btn
+                    @click="resetGoalPredictionForm()"
+                    elevation="0"
+                    outlined
+                    color="primary"
+                    style="width: 150px"
+                    >Reset Goals</v-btn
+                  >
+                  <v-btn
+                    elevation="0"
+                    class="ml-3"
+                    color="primary"
+                    @click.prevent="submitPredictionForm"
+                    style="width: 150px"
+                    >Save</v-btn
+                  >
+                </div>
               </v-col>
             </v-row>
           </div>
@@ -102,7 +109,7 @@
                   },
                   `gw-tab-${gameWeekTab}`,
                 ]"
-                @click="reloadGameWeek(gameWeekTab)"
+                @click="reloadGameWeek(gameWeekTab, true)"
               >
                 Game Week {{ gameWeekTab }}
               </v-btn>
@@ -119,12 +126,15 @@
                 class="mt-5"
               >
                 <v-card elevation="0" class="pa-5 text-center">
-                  <h5>
-                    {{ moment(fixture.kickoff_time).format("dddd D MMMM ") }}
-                  </h5>
-                  <h5>
-                    {{ moment(fixture.kickoff_time).format("h:mm A") }}
-                  </h5>
+                  <div v-if="!fixture.finished">
+                    <h5>
+                      {{
+                        moment(fixture.kickoff_time).format(
+                          "ddd , D MMM YYYY , h:mm A "
+                        )
+                      }}
+                    </h5>
+                  </div>
                   <div class="mt-5 d-flex justify-space-around align-center">
                     <div
                       class="d-flex flex-column justify-center recent-match-team align-center"
@@ -145,14 +155,24 @@
                     </div>
                     <div
                       v-if="fixture.finished"
-                      class="d-flex align-center recent-match-score"
+                      class="d-flex flex-column align-center recent-match-score"
                     >
-                      <div class="goal-div">
-                        {{ fixture.team_h_score }}
-                      </div>
-                      <h5 class="primary--text mx-3">VS</h5>
-                      <div class="goal-div">
-                        {{ fixture.team_a_score }}
+                      <div class="d-flex align-center">
+                        <div class="goal-div">
+                          {{
+                            fixture.prediction
+                              ? fixture.prediction.team_h_goal.value
+                              : "-"
+                          }}
+                        </div>
+                        <h5 class="primary--text mx-3">:</h5>
+                        <div class="goal-div">
+                          {{
+                            fixture.prediction
+                              ? fixture.prediction.team_a_goal.value
+                              : "-"
+                          }}
+                        </div>
                       </div>
                     </div>
                     <div
@@ -206,9 +226,27 @@
                       </span>
                     </div>
                   </div>
-                  <v-btn v-if="fixture.finished" class="primary mt-5" small
-                    >View Details</v-btn
+                  <div
+                    v-if="fixture.finished"
+                    class="d-flex justify-center mt-3 align-center"
                   >
+                    <div class="primary-badge mr-3">
+                      Result
+                      {{ fixture.team_h_score }} :
+                      {{ fixture.team_a_score }}
+                    </div>
+                    <div v-if="fixture.result_pts" class="primary-badge mr-3">
+                      You got + {{ fixture.result_pts }} pts
+                    </div>
+                    <div v-if="fixture.prediction">
+                      <div
+                        v-if="fixture.prediction.twox_booster"
+                        class="primary-badge"
+                      >
+                        2x Boosted
+                      </div>
+                    </div>
+                  </div>
                 </v-card>
               </div>
             </div>
@@ -230,6 +268,7 @@ import Picker from "vue-wheel-picker";
 export default {
   components: { TopNav, BottomNavigation, Picker },
   data: () => ({
+    check2xBoosted: false,
     loading: true,
     totalGameWeek: 0,
     gameWeek: 0,
@@ -243,6 +282,7 @@ export default {
       id: null,
       team_a: null,
       team_h: null,
+      twox_booster: false,
       home_team_goal: {
         text: 0,
         value: 0,
@@ -289,7 +329,17 @@ export default {
         .get("/fixtures", { params: { gw: this.gameWeek } })
         .then((res) => {
           this.fixtures = res.data;
+          let filteredPredictionNullFixtures = this.fixtures.filter(
+            (x) => x.prediction != null
+          );
 
+          let check2xBoosted = filteredPredictionNullFixtures.find(
+            (e) => e.prediction.twox_booster == 1
+          );
+
+          if (check2xBoosted) {
+            this.check2xBoosted = true;
+          }
           setTimeout(() => {
             var options = {
               container: ".gameweek-tabs",
@@ -313,13 +363,27 @@ export default {
           this.loading = false;
         });
     },
-    reloadGameWeek(gw) {
-      this.loading = true;
+    reloadGameWeek(gw, showLoading) {
+      this.loading = showLoading;
       this.gameWeek = gw;
       axios
         .get("/fixtures", { params: { gw: this.gameWeek } })
         .then((res) => {
           this.fixtures = res.data;
+
+          let filteredPredictionNullFixtures = this.fixtures.filter(
+            (x) => x.prediction != null
+          );
+
+          let check2xBoosted = filteredPredictionNullFixtures.find(
+            (e) => e.prediction.twox_booster == 1
+          );
+
+          if (check2xBoosted) {
+            this.check2xBoosted = true;
+          } else {
+            this.check2xBoosted = false;
+          }
 
           setTimeout(() => {
             var options = {
@@ -357,6 +421,7 @@ export default {
         if (fixture.prediction != null) {
           this.predictionForm.home_team_goal = fixture.prediction.team_h_goal;
           this.predictionForm.away_team_goal = fixture.prediction.team_a_goal;
+          this.predictionForm.twox_booster = fixture.prediction.twox_booster;
         }
         this.predictionForm.team_a = fixture.team_a;
         this.predictionForm.team_h = fixture.team_h;
@@ -368,20 +433,53 @@ export default {
     submitPredictionForm() {
       axios
         .post("/prediction", this.predictionForm)
-        .then(() => {
-          this.successPredicted = true;
-          this.reloadGameWeek(this.predictionForm.event);
+        .then((res) => {
+          if (res.data.success == false) {
+            this.reloadGameWeek(this.predictionForm.event);
+            switch (res.data.flag) {
+              case "boosted_limit":
+                this.showAlert({
+                  title: "Boost Failed",
+                  body: res.data.message,
+                  close: true,
+                });
+                break;
+            }
+          } else {
+            this.reloadGameWeek(this.predictionForm.event, true);
+          }
           this.predictionFormDialog = false;
           this.predictionForm.event = null;
           this.predictionForm.id = null;
           this.predictionForm.team_a = null;
+          this.predictionForm.twox_booster = false;
           this.predictionForm.team_h = null;
-          this.predictionForm.home_team_goal = null;
-          this.predictionForm.away_team_goal = null;
+          this.predictionForm.home_team_goal = {
+            text: 0,
+            value: 0,
+            visibility: true,
+          };
+          this.predictionForm.away_team_goal = {
+            text: 0,
+            value: 0,
+            visibility: true,
+          };
         })
         .catch((e) => {
           console.log(e);
         });
+    },
+    resetGoalPredictionForm() {
+      this.predictionForm.home_team_goal = {
+        text: 0,
+        value: 0,
+        visibility: true,
+      };
+      this.predictionForm.away_team_goal = {
+        text: 0,
+        value: 0,
+        visibility: true,
+      };
     },
   },
   mounted() {
@@ -391,6 +489,7 @@ export default {
         text: i,
       });
     }
+
     this.getFixturesMounted();
   },
 };
@@ -469,6 +568,17 @@ export default {
   font-size: 20px;
   font-weight: 500;
   color: #4c2fe3;
+}
+
+.primary-badge {
+  background: #edeafc;
+  color: #7a62f5;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 10px;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 </style>
 
