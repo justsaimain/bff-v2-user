@@ -218,7 +218,7 @@
                       </span>
                     </div>
                     <div
-                      v-if="!fixture.finished"
+                      v-if="fixture.finished"
                       class="d-flex flex-column align-center recent-match-score"
                       @click="showBreakdown(fixture)"
                     >
@@ -241,13 +241,13 @@
                       </div>
                     </div>
                     <div
-                      v-else-if="!fixture.started"
+                      v-else-if="fixture.started"
                       class="d-flex align-center"
                     >
                       <h4 class="primary--text">Started</h4>
                     </div>
                     <div
-                      v-else-if="!checkPredictionAccept(fixture)"
+                      v-else-if="checkPredictionAccept(fixture)"
                       class="d-flex align-center"
                     >
                       <div
