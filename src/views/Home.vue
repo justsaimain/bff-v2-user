@@ -15,6 +15,7 @@
           ></v-progress-circular
         ></v-card>
       </v-dialog>
+
       <v-container>
         <v-row class="primary main-header-div">
           <v-col cols="12">
@@ -181,6 +182,7 @@ export default {
   components: { TopNav, RecentMatches, BottomNavigation },
   data: () => ({
     loading: false,
+    welcome: true,
   }),
   computed: {
     ...mapGetters({
@@ -188,14 +190,6 @@ export default {
       user: "auth/user",
       options: "options/getOptions",
     }),
-  },
-  mounted() {
-    this.loading = true;
-    setTimeout(() => {
-      if (this.options) {
-        this.getFixture();
-      }
-    }, 3000);
   },
   methods: {
     getFixture() {
@@ -223,6 +217,14 @@ export default {
           this.loading = false;
         });
     },
+  },
+  mounted() {
+    this.loading = true;
+    setTimeout(() => {
+      if (this.options) {
+        this.getFixture();
+      }
+    }, 3000);
   },
 };
 </script>

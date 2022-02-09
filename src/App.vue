@@ -72,6 +72,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <sneck-bar></sneck-bar>
+
     <router-view />
     <!-- <vue-progress-bar></vue-progress-bar> -->
   </v-app>
@@ -79,7 +81,9 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import SneckBar from "./components/SneckBar.vue";
 export default {
+  components: { SneckBar },
   name: "App",
   computed: {
     ...mapGetters({
@@ -88,7 +92,6 @@ export default {
       teams: "teams/teams",
     }),
   },
-  component: {},
   data: () => ({
     isOffline: false,
   }),

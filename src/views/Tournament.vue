@@ -90,9 +90,67 @@
           </div>
         </v-sheet>
       </v-bottom-sheet>
-      <v-snackbar v-model="successPredicted">
-        Successfully Predicted
-      </v-snackbar>
+      <v-dialog v-model="showBreakdownDialog">
+        <v-card>
+          <v-list two-line subheader>
+            <v-subheader class="primary--text">Points breakdown</v-subheader>
+
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Outcome (win/draw/lose)</v-list-item-title>
+                <v-list-item-subtitle
+                  class="font-weight-bold"
+                  color="primary--text"
+                  >+
+                  {{ this.breakdownDialog.outcome }} Pts</v-list-item-subtitle
+                >
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Goal difference</v-list-item-title>
+                <v-list-item-subtitle
+                  class="font-weight-bold"
+                  color="primary--text"
+                  >+
+                  {{ this.breakdownDialog.goal_diff }} Pts</v-list-item-subtitle
+                >
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Home goals</v-list-item-title>
+                <v-list-item-subtitle
+                  class="font-weight-bold"
+                  color="primary--text"
+                  >+
+                  {{ this.breakdownDialog.home_goal }} Pts</v-list-item-subtitle
+                >
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Away goals</v-list-item-title>
+                <v-list-item-subtitle
+                  class="font-weight-bold"
+                  color="primary--text"
+                  >+
+                  {{ this.breakdownDialog.away_goal }} Pts</v-list-item-subtitle
+                >
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-card-actions class="pb-5">
+            <div>
+              Total Pts
+              <b class="primary--text">{{ this.breakdownDialog.total }} Pts</b>
+            </div>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-container>
         <v-row class="">
           <v-col cols="12">
@@ -137,7 +195,13 @@
                   </div>
                   <div class="mt-5 d-flex justify-space-around align-center">
                     <div
-                      class="d-flex flex-column justify-center recent-match-team align-center"
+                      class="
+                        d-flex
+                        flex-column
+                        justify-center
+                        recent-match-team
+                        align-center
+                      "
                     >
                       <v-avatar size="55" tile>
                         <img
@@ -154,8 +218,9 @@
                       </span>
                     </div>
                     <div
-                      v-if="fixture.finished"
+                      v-if="!fixture.finished"
                       class="d-flex flex-column align-center recent-match-score"
+                      @click="showBreakdown(fixture)"
                     >
                       <div class="d-flex align-center">
                         <div class="goal-div">
@@ -176,13 +241,13 @@
                       </div>
                     </div>
                     <div
-                      v-else-if="fixture.started"
+                      v-else-if="!fixture.started"
                       class="d-flex align-center"
                     >
                       <h4 class="primary--text">Started</h4>
                     </div>
                     <div
-                      v-else-if="checkPredictionAccept(fixture)"
+                      v-else-if="!checkPredictionAccept(fixture)"
                       class="d-flex align-center"
                     >
                       <div
@@ -209,7 +274,13 @@
                       <h4 class="primary--text">Prediction Close</h4>
                     </div>
                     <div
-                      class="d-flex flex-column justify-center recent-match-team align-center"
+                      class="
+                        d-flex
+                        flex-column
+                        justify-center
+                        recent-match-team
+                        align-center
+                      "
                     >
                       <v-avatar size="55" tile>
                         <img
@@ -294,6 +365,8 @@ export default {
         visibility: true,
       },
     },
+    showBreakdownDialog: false,
+    breakdownDialog: {},
   }),
   computed: {
     ...mapGetters({
@@ -307,13 +380,8 @@ export default {
       showAlert: "general/showAlert",
       hideAlert: "general/hideAlert",
       showNoAuthAlert: "general/showNoAuthAlert",
+      showSnackbarAction: "alert/showSnackbarAction",
     }),
-    scrollToElement(options) {
-      const el = this.$el.getElementsByClassName("fixture-card-236")[0];
-      if (el) {
-        el.scrollIntoView(options);
-      }
-    },
     getDefaultTeamImage(e) {
       e.target.src = "https://singlecolorimage.com/get/EEEEEE/55x55";
     },
@@ -328,6 +396,7 @@ export default {
       axios
         .get("/fixtures", { params: { gw: this.gameWeek } })
         .then((res) => {
+          console.log(res.data);
           this.fixtures = res.data;
           let filteredPredictionNullFixtures = this.fixtures.filter(
             (x) => x.prediction != null
@@ -370,6 +439,7 @@ export default {
         .get("/fixtures", { params: { gw: this.gameWeek } })
         .then((res) => {
           this.fixtures = res.data;
+          console.log(res.data);
 
           let filteredPredictionNullFixtures = this.fixtures.filter(
             (x) => x.prediction != null
@@ -418,6 +488,22 @@ export default {
       if (!this.authenticated) {
         this.showNoAuthAlert();
       } else {
+        this.predictionFormDialog = false;
+        this.predictionForm.event = null;
+        this.predictionForm.id = null;
+        this.predictionForm.team_a = null;
+        this.predictionForm.twox_booster = false;
+        this.predictionForm.team_h = null;
+        this.predictionForm.home_team_goal = {
+          text: 0,
+          value: 0,
+          visibility: true,
+        };
+        this.predictionForm.away_team_goal = {
+          text: 0,
+          value: 0,
+          visibility: true,
+        };
         if (fixture.prediction != null) {
           this.predictionForm.home_team_goal = fixture.prediction.team_h_goal;
           this.predictionForm.away_team_goal = fixture.prediction.team_a_goal;
@@ -447,6 +533,11 @@ export default {
             }
           } else {
             this.reloadGameWeek(this.predictionForm.event, true);
+            this.showSnackbarAction({
+              show: true,
+              color: "success",
+              message: "Successfully Predicted",
+            });
           }
           this.predictionFormDialog = false;
           this.predictionForm.event = null;
@@ -480,6 +571,11 @@ export default {
         value: 0,
         visibility: true,
       };
+    },
+    showBreakdown(fixture) {
+      console.log(fixture.breakdown);
+      this.breakdownDialog = fixture.breakdown;
+      this.showBreakdownDialog = true;
     },
   },
   mounted() {

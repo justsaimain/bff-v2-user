@@ -71,6 +71,7 @@ export default {
   methods: {
     ...mapActions({
       attemptLogin: "auth/attemptLogin",
+      showSnackbarAction: "alert/showSnackbarAction",
     }),
     login() {
       if (this.$refs.form.validate()) {
@@ -83,7 +84,14 @@ export default {
             let response = res.data;
             if (response.success == true) {
               this.attemptLogin(response.data.token);
-              this.$router.replace({ name: "Setting" });
+              this.showSnackbarAction({
+                show: true,
+                color: "success",
+                message: "Successfully Login",
+              });
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 500);
             }
             this.loading = false;
           })

@@ -26,19 +26,46 @@
                 class="avatar"
                 color="white"
               >
+                <div v-if="previewImage">
+                  <img
+                    @click="selectImage"
+                    :style="{
+                      'background-size': 'cover',
+                      'background-image': `url(${previewImage})`,
+                    }"
+                  />
+                </div>
+
                 <img
-                  :src="
-                    user.profile
-                      ? user.profile
-                      : 'https://resources.premierleague.com/premierleague/badges/70/t' +
-                        user.fav_team +
-                        '.png'
-                  "
-                  alt=""
+                  v-else
+                  @click="selectImage"
+                  :style="{
+                    'background-size': 'cover',
+                    'background-image': `url(${
+                      user.profile
+                        ? env.mediaUrl + '/profiles/' + user.profile
+                        : 'https://resources.premierleague.com/premierleague/badges/70/t' +
+                          user.fav_team +
+                          '.png'
+                    })`,
+                  }"
+                />
+
+                <input
+                  style="display: none"
+                  ref="fileInput"
+                  type="file"
+                  @input="pickFile"
                 />
               </v-avatar>
               <v-avatar v-else size="100" class="avatar" color="white">
-                <img :src="require('../assets/logo.jpg')" alt="" />
+                <img
+                  :style="{
+                    'background-size': 'cover',
+                    'background-image': `url(${require('../assets/logo.jpg')})`,
+                  }"
+                  alt=""
+                />
               </v-avatar>
               <div class="mt-10">
                 <template v-if="authenticated && user != null">
@@ -115,11 +142,16 @@
 import BottomNavigation from "../components/BottomNavigation.vue";
 import TopNav from "../components/TopNav.vue";
 import { mapGetters, mapActions } from "vuex";
+import axios from "axios";
+import env from "../env";
 export default {
   components: { TopNav, BottomNavigation },
   data: () => ({
+    env,
     logoutDialog: false,
-    fav_team_name : ""
+    fav_team_name: "",
+    previewImage: null,
+    avatar: null,
   }),
   computed: {
     ...mapGetters({
@@ -131,21 +163,66 @@ export default {
   methods: {
     ...mapActions({
       logoutAction: "auth/Logout",
+      showSnackbarAction: "alert/showSnackbarAction",
+      storeUser: "auth/storeUser",
     }),
     logout() {
       this.logoutAction().then(() => {
         (this.logoutDialog = false),
-          this.$router
-            .replace({
-              name: "Setting",
-            })
-            .catch(() => {});
+          this.showSnackbarAction({
+            show: true,
+            color: "red accent-2",
+            message: "Successfully Logout",
+          });
+        this.$router
+          .replace({
+            name: "Setting",
+          })
+          .catch(() => {});
       });
+    },
+    selectImage() {
+      this.$refs.fileInput.click();
+    },
+    pickFile() {
+      let input = this.$refs.fileInput;
+      let file = input.files;
+      if (file && file[0]) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          this.previewImage = e.target.result;
+        };
+        reader.readAsDataURL(file[0]);
+        this.$emit("input", file[0]);
+
+        let frm = new FormData();
+        frm.append("profile", file[0]);
+        axios
+          .post("profile", frm)
+          .then((res) => {
+            this.previewImage = null;
+            this.avatar = env.mediaUrl + "/profiles/" + this.user.profile;
+            this.storeUser(res.data.extra);
+            this.showSnackbarAction({
+              show: true,
+              color: "success",
+              message: "Profile Updated",
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     },
   },
   mounted() {
-    if (this.teams) {
-        this.fav_team_name = this.teams.find((x) => x.code == this.user.fav_team).name;
+    if (this.authenticated) {
+      this.avatar = env.mediaUrl + "/profiles/" + this.user.profile;
+      if (this.teams) {
+        this.fav_team_name = this.teams.find(
+          (x) => x.code == this.user.fav_team
+        ).name;
+      }
     }
   },
 };
