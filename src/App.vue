@@ -73,7 +73,7 @@
       </v-card>
     </v-dialog>
     <sneck-bar></sneck-bar>
-
+    <m-dialog></m-dialog>
     <router-view />
     <!-- <vue-progress-bar></vue-progress-bar> -->
   </v-app>
@@ -81,9 +81,10 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import MDialog from "./components/MDialog.vue";
 import SneckBar from "./components/SneckBar.vue";
 export default {
-  components: { SneckBar },
+  components: { SneckBar, MDialog },
   name: "App",
   computed: {
     ...mapGetters({

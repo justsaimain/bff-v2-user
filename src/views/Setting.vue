@@ -205,8 +205,7 @@ export default {
             this.storeUser(res.data.extra);
             this.showSnackbarAction({
               show: true,
-              color: "success",
-              message: "Profile Updated",
+              message: "Profile picture updated.",
             });
           })
           .catch((e) => {

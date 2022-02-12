@@ -84,14 +84,7 @@ export default {
             let response = res.data;
             if (response.success == true) {
               this.attemptLogin(response.data.token);
-              this.showSnackbarAction({
-                show: true,
-                color: "success",
-                message: "Successfully Login",
-              });
-              setTimeout(() => {
-                window.location.href = "/";
-              }, 500);
+              window.location.href = "/";
             }
             this.loading = false;
           })

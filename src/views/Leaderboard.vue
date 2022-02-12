@@ -184,7 +184,7 @@ import axios from "axios";
 import BottomNavigation from "../components/BottomNavigation.vue";
 import TopNav from "../components/TopNav.vue";
 var GameWeekTabScrollTo = require("vue-scrollto");
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import env from "../env";
 export default {
   components: { TopNav, BottomNavigation },
@@ -200,6 +200,9 @@ export default {
     teams: "teams/teams",
   }),
   methods: {
+    ...mapActions({
+      showSnackbarAction: "alert/showSnackbarAction",
+    }),
     reloadGameWeek(gw, showLoading) {
       this.leaderboard = null;
       this.top_one = null;
@@ -208,9 +211,15 @@ export default {
       axios
         .get("/leaderboard", { params: { gw: this.gameWeek } })
         .then((res) => {
-          this.leaderboard = res.data.data;
-          this.top_one = this.leaderboard.shift();
-          console.log(res);
+          if (res.data.data.length > 0) {
+            this.leaderboard = res.data.data;
+            this.top_one = this.leaderboard.shift();
+          } else {
+            this.showSnackbarAction({
+              show: true,
+              message: "No Data for Gameweek " + this.gameWeek,
+            });
+          }
 
           setTimeout(() => {
             var options = {
@@ -244,10 +253,15 @@ export default {
       axios
         .get("/leaderboard", { params: { gw: this.gameWeek } })
         .then((res) => {
-          console.log(res);
-
-          this.leaderboard = res.data.data;
-          this.top_one = this.leaderboard.shift();
+          if (res.data.data.length > 0) {
+            this.leaderboard = res.data.data;
+            this.top_one = this.leaderboard.shift();
+          } else {
+            this.showSnackbarAction({
+              show: true,
+              message: "No Data for Gameweek " + this.gameWeek,
+            });
+          }
 
           setTimeout(() => {
             var options = {

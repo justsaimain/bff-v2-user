@@ -117,6 +117,7 @@ export default {
     ...mapActions({
       storeOTP: "auth/storeOTP",
       getTeamsDataAction: "getTeamsDataAction",
+      showDialogAction: "alert/showDialogAction",
     }),
     async fetchData() {
       await this.getTeamsDataAction()
@@ -135,19 +136,23 @@ export default {
           .then((res) => {
             let response = res.data;
             if (response.flag === "verify_otp") {
-              if (response.extra.status == true) {
-                this.storeOTP(response.extra);
+              if (response.data.status == true) {
+                this.storeOTP(response.data);
               }
               this.$router.replace({
                 name: "Verify",
               });
             }
-            console.log(response);
             this.loading = false;
           })
           .catch((e) => {
             this.loading = false;
-            console.log(e);
+            if (e.response) {
+              this.showDialogAction({
+                title: "Error",
+                body: e.response.data.errors["phone"][0],
+              });
+            }
           });
       }
     },
