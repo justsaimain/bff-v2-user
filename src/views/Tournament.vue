@@ -143,12 +143,6 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
-          <v-card-actions class="pb-5">
-            <div>
-              Total Pts
-              <b class="primary--text">{{ this.breakdownDialog.total }} Pts</b>
-            </div>
-          </v-card-actions>
         </v-card>
       </v-dialog>
       <v-container>

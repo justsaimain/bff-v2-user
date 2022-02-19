@@ -6,6 +6,7 @@ import teams from "./teams";
 import general from "./general";
 import options from "./options";
 import axios from "axios";
+import home from "./home";
 
 Vue.use(Vuex);
 
@@ -29,5 +30,6 @@ export default new Vuex.Store({
     general,
     options,
     alert,
+    home,
   },
 });

@@ -9,6 +9,8 @@ export default {
     },
     dialogData: {
       show: false,
+      link: null,
+      linkText: "",
       persistent: true,
       title: "",
       body: "",
@@ -40,6 +42,8 @@ export default {
       state.dialogData.title = data.title;
       state.dialogData.body = data.body;
       state.dialogData.list = data.list ? data.list : null;
+      state.dialogData.link = data.link ? data.link : null;
+      state.dialogData.linkText = data.linkText;
       state.dialogData.close = data.close ? data.close : true;
     },
   },

@@ -76,9 +76,9 @@
                   </div>
                 </v-card>
               </div>
-              <div v-for="p in leaderboard" :key="p.id" class="mt-5">
+              <div v-for="(p, index) in leaderboard" :key="p.id" class="mt-5">
                 <v-card class="pa-3 predictor-card" elevation="0">
-                  <!-- <div class="predictor-badge">{{ index + 1 }}</div> -->
+                  <div class="predictor-badge">{{ index + 2 }}</div>
                   <div
                     class="
                       mt-5

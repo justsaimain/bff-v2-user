@@ -15,7 +15,6 @@
           ></v-progress-circular
         ></v-card>
       </v-dialog>
-
       <v-container>
         <v-row class="primary main-header-div">
           <v-col cols="12">
@@ -33,40 +32,27 @@
                 >
                   Game Week {{ this.options.current_gameweek }} Result
                 </p>
-                <v-row
-                  v-if="authenticated && user != null"
-                  class="px-3"
-                  align="end"
-                  justify="center"
-                >
+                <v-row class="px-3" align="end" justify="center">
                   <v-col class="text-center average-div">
-                    <p class="mb-0">42</p>
+                    <p class="mb-0">
+                      {{ homeData ? homeData.avg_score : 0 }}
+                    </p>
                     <p class="mb-0">Average</p>
                   </v-col>
                   <v-col class="text-center your-score-div">
-                    <p class="mb-0">42</p>
+                    <p class="mb-0">
+                      {{ homeData ? homeData.your_score : 0 }}
+                    </p>
                     <p class="mb-0">Your Score</p>
                   </v-col>
                   <v-col class="text-center highest-div">
-                    <p class="mb-0">42</p>
+                    <p class="mb-0">
+                      {{ homeData ? homeData.highest_score : 0 }}
+                    </p>
                     <p class="mb-0">Highest</p>
                   </v-col>
                 </v-row>
-                <v-row v-else class="px-3" align="end" justify="center">
-                  <v-col class="text-center average-div">
-                    <p class="mb-0">00</p>
-                    <p class="mb-0">Average</p>
-                  </v-col>
-                  <v-col class="text-center your-score-div">
-                    <p class="mb-0">--</p>
-                    <p class="mb-0">Your Score</p>
-                  </v-col>
-                  <v-col class="text-center highest-div">
-                    <p class="mb-0">00</p>
-                    <p class="mb-0">Highest</p>
-                  </v-col>
-                </v-row>
-                <v-divider class="my-3"></v-divider>
+                <!-- <v-divider class="my-3"></v-divider>
                 <v-row class="px-3" justify="center" align="center">
                   <v-col> </v-col>
                   <v-col class="text-end">
@@ -74,7 +60,7 @@
                       >View Detail
                     </v-btn>
                   </v-col>
-                </v-row>
+                </v-row> -->
               </v-card>
             </div>
             <recent-matches></recent-matches>
@@ -176,13 +162,14 @@
 import BottomNavigation from "../components/BottomNavigation.vue";
 import TopNav from "../components/TopNav.vue";
 import RecentMatches from "../components/RecentMatches.vue";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 export default {
   components: { TopNav, RecentMatches, BottomNavigation },
   data: () => ({
     loading: false,
     welcome: true,
+    homeData: null,
   }),
   computed: {
     ...mapGetters({
@@ -192,6 +179,9 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      getHomeDataAction: "home/getHomeDataAction",
+    }),
     getFixture() {
       axios
         .get("/fixtures", { params: { gw: this.options.current_gameweek } })
@@ -217,13 +207,20 @@ export default {
           this.loading = false;
         });
     },
+    async fetchData() {
+      await this.getHomeDataAction().then((res) => {
+        this.homeData = res.data;
+      });
+    },
   },
   mounted() {
     this.loading = true;
+
     setTimeout(() => {
       if (this.options) {
         this.getFixture();
       }
+      this.fetchData();
     }, 3000);
   },
 };

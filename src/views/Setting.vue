@@ -61,7 +61,8 @@
               <v-avatar v-else size="100" class="avatar" color="white">
                 <img
                   :style="{
-                    'background-size': 'cover',
+                    'background-size': 'contain',
+                    'background-position': 'center',
                     'background-image': `url(${require('../assets/logo.jpg')})`,
                   }"
                   alt=""
@@ -89,7 +90,7 @@
             </div>
             <v-list color="mt-5 rounded" flat>
               <v-list-item-group>
-                <v-list-item>
+                <v-list-item @click="showDataDialog('terms')">
                   <v-list-item-content>
                     <v-list-item-title>
                       <v-icon class="mr-3">mdi-clipboard-text</v-icon>
@@ -97,7 +98,7 @@
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item @click="showDataDialog('faq')">
                   <v-list-item-content>
                     <v-list-item-title>
                       <v-icon class="mr-3">mdi-help</v-icon>
@@ -105,7 +106,7 @@
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item @click="showDataDialog('feedback')">
                   <v-list-item-content>
                     <v-list-item-title>
                       <v-icon class="mr-3">mdi-star</v-icon>
@@ -113,7 +114,7 @@
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item>
+                <v-list-item @click="showDataDialog('contact')">
                   <v-list-item-content>
                     <v-list-item-title>
                       <v-icon class="mr-3">mdi-phone-in-talk</v-icon>
@@ -152,6 +153,11 @@ export default {
     fav_team_name: "",
     previewImage: null,
     avatar: null,
+    dialogTitle: "",
+    dialogBody: "",
+    dialogList: null,
+    dialogLink: null,
+    dialogLinkText: "",
   }),
   computed: {
     ...mapGetters({
@@ -164,6 +170,7 @@ export default {
     ...mapActions({
       logoutAction: "auth/Logout",
       showSnackbarAction: "alert/showSnackbarAction",
+      showDialogAction: "alert/showDialogAction",
       storeUser: "auth/storeUser",
     }),
     logout() {
@@ -212,6 +219,58 @@ export default {
             console.log(e);
           });
       }
+    },
+    showDataDialog(data) {
+      switch (data) {
+        case "terms":
+          this.dialogTitle = "Terms and Conditions";
+          this.dialogBody = "အမှတ်ပေးစည်းမျဉ်း";
+          this.dialogList = [
+            "❖ အရှုံး၊ အနိုင်၊ သရေ ရလဒ် မှန်အောင်ခန့်မှန်းနိုင်ပါက တစ်ပွဲလျှင် ၃ မှတ်",
+            "❖ အသင်းတစ်သင်းအတွက် ဂိုးရလဒ်မှန်အောင်ခန့်မှန်းနိုင်ပါက တစ်သင်းလျှင် ၁ မှတ်",
+            "❖ ဂိုးကွာခြားချက်မှန်ကန်ပါက ၁ မှတ်",
+            "❖ 2x booster ရွေးထားတဲ့ပွဲရဲ့ ရလဒ်အတွက် ရမှတ် x 2ဆ",
+            "❖ ရမှတ်တူရှိရင် မဲနှိုက်ရွေးချယ်ပေးသွားပါမယ်",
+          ];
+          this.dialogLink = null;
+          this.dialogLinkText = "";
+          break;
+        case "faq":
+          this.dialogTitle = "Frequently Asked Questions";
+          this.dialogList = [
+            `❖ Burmese Fantasy Football (BFF) ဆိုတာဘာလဲ။ ဘောလုံးပွဲခန့်မှန်းရတာ၊ Fantasy Football ဂိမ်းတွေဆော့ရတာနှစ်ခြိုက်တဲ့ ဘောလုံးဖန်တွေအတွက် ပြိုင်ပွဲတွေဝင်ရောက်ယှဉ်ပြိုင်ပြီး ဆုလက်ဆောင်တွေရယူနိုင်မယ့် App ပဲ ဖြစ်ပါတယ်။`,
+            `❖ ဝင်ကြေးရှိလား။ ဝင်ကြေး အခမဲ့ပါ။`,
+            `❖ ဆုကြေးကဘယ်လိုလဲ။ အပတ်စဉ်တိုင်းမှာ အမှတ်အများဆုံးသူက "တစ်သောင်းကျပ်" ရရှိမှာဖြစ်ပါတယ်။`,
+          ];
+          this.dialogBody = "";
+          this.dialogLink = null;
+          this.dialogLinkText = "";
+          break;
+        case "contact":
+          this.dialogTitle = "Contact Us";
+          this.dialogBody = "(+95) 9972709001 သို့ ဆက်သွယ်နိုင်ပါသည်။.";
+          this.dialogList = null;
+          this.dialogLink = null;
+          this.dialogLinkText = "";
+          break;
+        case "feedback":
+          this.dialogTitle = "Give Us Feedbacks";
+          this.dialogBody =
+            "Burmese Fantasy Football ၏ Facebook Messenger တွင် Feedback ပေးနိုင်ပါသည်။";
+          this.dialogList = null;
+          this.dialogLink = "https://m.me/BurmeseFantasyFootball";
+          this.dialogLinkText = "BFF Messenger";
+          break;
+        default:
+          break;
+      }
+      this.showDialogAction({
+        title: this.dialogTitle,
+        body: this.dialogBody,
+        list: this.dialogList,
+        link: this.dialogLink,
+        linkText: this.dialogLinkText,
+      });
     },
   },
   mounted() {

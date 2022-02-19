@@ -15,6 +15,15 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
+          v-if="dialogData.link"
+          target="_blank"
+          :href="dialogData.link"
+          color="primary"
+          text
+        >
+          {{ dialogData.linkText }}
+        </v-btn>
+        <v-btn
           v-if="dialogData.close"
           color="grey darken-1"
           text
