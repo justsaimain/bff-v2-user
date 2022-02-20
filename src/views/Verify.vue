@@ -86,7 +86,7 @@ export default {
         .then((res) => {
           console.log(res);
           let response = res.data;
-          if (response.data.status == true) {
+          if (response.data.extra.status == true) {
             // success
             localStorage.setItem("token", response.data.token);
             this.attemptLogin(response.data.token);
