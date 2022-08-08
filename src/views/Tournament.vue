@@ -464,11 +464,14 @@ export default {
         });
     },
     checkPredictionAccept(fixture) {
-      const checkTime = moment(fixture.kickoff_time)
-        .subtract(30, "minutes")
-        .format("YYYY-MM-D HH:mm");
+      const checkTime = moment(
+        new Date(fixture.kickoff_time),
+        "YYYY-MM-D HH:mm"
+      ).subtract(30, "minutes");
       console.log("check time", checkTime);
-      const nowTime = moment().tz("Asia/Yangon").format("YYYY-MM-D HH:mm");
+      const nowTime = moment(new Date.now())
+        .tz("Asia/Yangon")
+        .format("YYYY-MM-D HH:mm");
       console.log("now time", nowTime);
       return moment(nowTime).isBefore(checkTime);
     },
