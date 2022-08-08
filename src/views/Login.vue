@@ -86,9 +86,9 @@ export default {
               this.attemptLogin(response.data.token);
               setTimeout(() => {
                 window.location.href = "/";
-                this.loading = false;
               }, 1000);
             }
+            this.loading = false;
           })
           .catch((e) => {
             console.log(e);
