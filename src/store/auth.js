@@ -59,7 +59,7 @@ export default {
         .catch((e) => {
           commit("SET_TOKEN", null);
           commit("SET_USER", null);
-          router.replace({ name: "Home" });
+          router.replace("/");
           console.log(e);
         });
     },

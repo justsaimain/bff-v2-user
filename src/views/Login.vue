@@ -84,7 +84,9 @@ export default {
             let response = res.data;
             if (response.success == true) {
               this.attemptLogin(response.data.token);
-              window.location.href = "/";
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 1000);
             }
             this.loading = false;
           })
