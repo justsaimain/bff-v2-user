@@ -177,6 +177,7 @@
                 :class="[`fixture-card-${fixture.id}`]"
                 class="mt-5"
               >
+                {{ checkPredictionAccept(fixture) }}
                 <v-card elevation="0" class="pa-5 text-center">
                   <div v-if="!fixture.finished">
                     <h5>
@@ -466,7 +467,9 @@ export default {
       const checkTime = moment(fixture.kickoff_time)
         .subtract(30, "minutes")
         .format("YYYY-MM-D HH:mm");
+      console.log("check time", checkTime);
       const nowTime = moment().tz("Asia/Yangon").format("YYYY-MM-D HH:mm");
+      console.log("now time", nowTime);
       return moment(nowTime).isBefore(checkTime);
     },
     showPredictionForm(fixture) {
