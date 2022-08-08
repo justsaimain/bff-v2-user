@@ -319,6 +319,7 @@ import TopNav from "../components/TopNav.vue";
 var GameWeekTabScrollTo = require("vue-scrollto");
 import { mapGetters, mapActions } from "vuex";
 import moment from "moment";
+import "moment-timezone";
 import Picker from "vue-wheel-picker";
 export default {
   components: { TopNav, BottomNavigation, Picker },
