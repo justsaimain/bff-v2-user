@@ -76,6 +76,7 @@ export default {
     login() {
       if (this.$refs.form.validate()) {
         this.loading = true;
+
         axios
           .post("auth/login", this.form)
           .then((res) => {
@@ -84,8 +85,8 @@ export default {
             if (response.success == true) {
               this.attemptLogin(response.data.token);
               setTimeout(() => {
-                this.loading = false;
                 window.location.href = "/";
+                this.loading = false;
               }, 1000);
             }
           })
