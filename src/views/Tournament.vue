@@ -465,7 +465,7 @@ export default {
       const checkTime = moment(fixture.kickoff_time)
         .subtract(30, "minutes")
         .format("YYYY-MM-D HH:mm");
-      const nowTime = moment().format("YYYY-MM-D HH:mm");
+      const nowTime = moment().tz("Asia/Yangon").format("YYYY-MM-D HH:mm");
       return moment(nowTime).isBefore(checkTime);
     },
     showPredictionForm(fixture) {
