@@ -189,13 +189,7 @@
                   </div>
                   <div class="mt-5 d-flex justify-space-around align-center">
                     <div
-                      class="
-                        d-flex
-                        flex-column
-                        justify-center
-                        recent-match-team
-                        align-center
-                      "
+                      class="d-flex flex-column justify-center recent-match-team align-center"
                     >
                       <v-avatar size="55" tile>
                         <img
@@ -265,16 +259,12 @@
                       </div>
                     </div>
                     <div v-else class="d-flex align-center">
-                      <h4 class="primary--text">Prediction Close</h4>
+                      <h4 class="primary--text">
+                        {{ checkPredictionAccept(fixture) }}
+                      </h4>
                     </div>
                     <div
-                      class="
-                        d-flex
-                        flex-column
-                        justify-center
-                        recent-match-team
-                        align-center
-                      "
+                      class="d-flex flex-column justify-center recent-match-team align-center"
                     >
                       <v-avatar size="55" tile>
                         <img
