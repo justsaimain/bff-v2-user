@@ -177,7 +177,6 @@
                 :class="[`fixture-card-${fixture.id}`]"
                 class="mt-5"
               >
-                {{ checkPredictionAccept(fixture) }}
                 <v-card elevation="0" class="pa-5 text-center">
                   <div v-if="!fixture.finished">
                     <h5>
@@ -260,9 +259,7 @@
                       </div>
                     </div>
                     <div v-else class="d-flex align-center">
-                      <h4 class="primary--text">
-                        {{ checkPredictionAccept(fixture) }}
-                      </h4>
+                      <h4 class="primary--text">Prediction Closed</h4>
                     </div>
                     <div
                       class="d-flex flex-column justify-center recent-match-team align-center"
@@ -464,15 +461,12 @@ export default {
         });
     },
     checkPredictionAccept(fixture) {
-      const checkTime = moment(
-        new Date(fixture.kickoff_time),
-        "YYYY-MM-D HH:mm"
-      ).subtract(30, "minutes");
-      console.log("check time", checkTime);
-      const nowTime = moment(new Date.now())
+      const checkTime = moment(new Date(fixture.kickoff_time))
+        .subtract(30, "minutes")
+        .format("YYYY-MM-D HH:mm");
+      const nowTime = moment(new Date())
         .tz("Asia/Yangon")
         .format("YYYY-MM-D HH:mm");
-      console.log("now time", nowTime);
       return moment(nowTime).isBefore(checkTime);
     },
     showPredictionForm(fixture) {
