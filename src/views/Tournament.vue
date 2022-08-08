@@ -181,9 +181,10 @@
                   <div v-if="!fixture.finished">
                     <h5>
                       {{
-                        moment(fixture.kickoff_time).format(
-                          "ddd , D MMM YYYY , h:mm A "
-                        )
+                        moment(
+                          new Date(fixture.kickoff_time),
+                          moment.ISO_8601
+                        ).format("ddd , D MMM YYYY , h:mm A ")
                       }}
                     </h5>
                   </div>
@@ -461,12 +462,11 @@ export default {
         });
     },
     checkPredictionAccept(fixture) {
-      const checkTime = moment(new Date(fixture.kickoff_time))
-        .subtract(30, "minutes")
-        .format("YYYY-MM-D HH:mm");
-      const nowTime = moment(new Date())
-        .tz("Asia/Yangon")
-        .format("YYYY-MM-D HH:mm");
+      const checkTime = moment(fixture.kickoff_time, moment.ISO_8601).subtract(
+        30,
+        "minutes"
+      );
+      const nowTime = moment().toISOString();
       return moment(nowTime).isBefore(checkTime);
     },
     showPredictionForm(fixture) {
