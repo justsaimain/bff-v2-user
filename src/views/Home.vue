@@ -63,21 +63,43 @@
                 </v-row> -->
               </v-card>
             </div>
-            <recent-matches></recent-matches>
-            <div class="mt-5">
-              <p class="small-page-title">Game Week 1 Top Predictor</p>
+            <template v-if="!loading && homeData">
+              <recent-matches
+                v-if="homeData.recent_matchs"
+                :data="homeData.recent_matchs"
+              ></recent-matches>
+            </template>
+            <div class="mt-5" v-if="homeData && homeData.top_predictor">
+              <p class="small-page-title">
+                Game Week {{ homeData && homeData.current_gameweek }} Top
+                Predictor
+              </p>
               <v-card elevation="0" class="top-predictor-card">
                 <v-avatar size="80" class="top-predictor-avatar">
                   <img
-                    src="https://randomuser.me/api/portraits/men/99.jpg"
+                    :src="
+                      homeData.top_predictor.user.profile
+                        ? env.mediaUrl +
+                          '/profiles/' +
+                          homeData.top_predictor.user.profile
+                        : 'https://resources.premierleague.com/premierleague/badges/70/t' +
+                          homeData.top_predictor.user.fav_team +
+                          '.png'
+                    "
                     alt=""
                   />
                 </v-avatar>
                 <div>
-                  <h3 class="top-predictor-name">Aung Thu Hein</h3>
-                  <p class="mb-0 top-predictor-points">114 Points</p>
-                  <p class="mb-0 top-predictor-details">ManU | Yangon</p>
-                  <v-btn class="primary view-leaderboard-btn"
+                  <h3 class="top-predictor-name">
+                    {{ homeData.top_predictor.user.name }}
+                  </h3>
+                  <p class="mb-0 top-predictor-points">
+                    {{ homeData.top_predictor.pts }} Points
+                  </p>
+                  <p class="mb-0 top-predictor-details">
+                    {{ homeData.top_predictor.user.region }}
+                  </p>
+                  <v-btn to="/leaderboard" class="primary view-leaderboard-btn"
                     >View Leaderboard</v-btn
                   >
                 </div>
@@ -182,8 +204,8 @@ export default {
     ...mapActions({
       getHomeDataAction: "home/getHomeDataAction",
     }),
-    getFixture() {
-      axios
+    async getFixture() {
+      await axios
         .get("/fixtures", { params: { gw: this.options.current_gameweek } })
         .then((res) => {
           this.fixtures = res.data;
@@ -200,28 +222,37 @@ export default {
             this.check2xBoosted = true;
           }
 
-          this.loading = false;
+          setTimeout(() => {
+            this.loading = false;
+          }, 1000);
         })
         .catch((e) => {
           console.log(e);
-          this.loading = false;
+          setTimeout(() => {
+            this.loading = false;
+          }, 1000);
         });
     },
     async fetchData() {
+      this.loading = true;
+
       await this.getHomeDataAction().then((res) => {
         this.homeData = res.data;
+        setTimeout(() => {
+          this.loading = false;
+        }, 1000);
       });
     },
   },
   mounted() {
-    this.loading = true;
+    // setTimeout(() => {
+    // this.loading = true;
 
-    setTimeout(() => {
-      if (this.options) {
-        this.getFixture();
-      }
-      this.fetchData();
-    }, 3000);
+    if (this.options) {
+      this.getFixture();
+    }
+    this.fetchData();
+    // }, 3000);
   },
 };
 </script>

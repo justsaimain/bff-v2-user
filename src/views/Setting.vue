@@ -273,12 +273,12 @@ export default {
       });
     },
   },
-  mounted() {
+  async mounted() {
     if (this.authenticated) {
-      this.avatar = env.mediaUrl + "/profiles/" + this.user.profile;
+      this.avatar = env.mediaUrl + "/profiles/" + this.user?.profile;
       if (this.teams) {
         this.fav_team_name = this.teams.find(
-          (x) => x.code == this.user.fav_team
+          (x) => x.code == this.user?.fav_team
         ).name;
       }
     }

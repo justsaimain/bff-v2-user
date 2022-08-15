@@ -83,12 +83,22 @@ export default {
             console.log(res);
             let response = res.data;
             if (response.success == true) {
+              this.showSnackbarAction({
+                show: true,
+                message: "Successfully login!",
+              });
               this.attemptLogin(response.data.token);
               setTimeout(() => {
                 window.location.href = "/";
-              }, 1000);
+              }, 500);
+              this.loading = false;
+            } else {
+              this.showSnackbarAction({
+                show: true,
+                message: "Wrong Phone number or Password!",
+              });
+              this.loading = false;
             }
-            this.loading = false;
           })
           .catch((e) => {
             console.log(e);
