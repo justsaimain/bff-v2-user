@@ -9,6 +9,7 @@ import VueOffline from "vue-offline";
 import VsToast from "@vuesimple/vs-toast";
 import VueProgressBar from "vue-progressbar";
 import VueScrollPicker from "vue-scroll-picker";
+import VueAnalytics from "vue-analytics";
 
 Vue.use(VueScrollPicker);
 
@@ -34,6 +35,10 @@ const options = {
 };
 
 Vue.use(VueProgressBar, options);
+Vue.use(VueAnalytics, {
+  id: "G-3XMXH86EX5",
+  router,
+});
 axios.defaults.baseURL = "https://backend.bffsports.com/api";
 // axios.defaults.baseURL = "http://127.0.0.1:8000/api";
 axios.defaults.headers.common["x-rapidapi-host"] =

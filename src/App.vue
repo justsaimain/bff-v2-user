@@ -78,7 +78,19 @@
     <!-- <vue-progress-bar></vue-progress-bar> -->
   </v-app>
 </template>
+<script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-3XMXH86EX5"
+></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag() {
+  dataLayer.push(arguments);
+}
+gtag("js", new Date());
 
+gtag("config", "G-3XMXH86EX5");
+</script>
 <script>
 import { mapActions, mapGetters } from "vuex";
 import MDialog from "./components/MDialog.vue";

@@ -17,6 +17,7 @@
     "node-sass": "^6.0.1",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
+    "vue-analytics": "^5.22.1",
     "vue-moment": "^4.1.0",
     "vue-offline": "^2.0.8",
     "vue-progressbar": "^0.7.5",
