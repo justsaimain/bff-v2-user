@@ -178,6 +178,7 @@
       </v-container>
     </v-main>
     <bottom-navigation></bottom-navigation>
+    <PWAPrompt />
   </v-app>
 </template>
 <script>
@@ -186,8 +187,10 @@ import TopNav from "../components/TopNav.vue";
 import RecentMatches from "../components/RecentMatches.vue";
 import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
+import PWAPrompt from "vue2-ios-pwa-prompt";
+
 export default {
-  components: { TopNav, RecentMatches, BottomNavigation },
+  components: { TopNav, RecentMatches, BottomNavigation, PWAPrompt },
   data: () => ({
     loading: false,
     welcome: true,
