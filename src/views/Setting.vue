@@ -274,6 +274,7 @@ export default {
     },
   },
   async mounted() {
+    this.$ga.page("/setting");
     if (this.authenticated) {
       this.avatar = env.mediaUrl + "/profiles/" + this.user?.profile;
       if (this.teams) {

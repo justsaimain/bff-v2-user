@@ -247,7 +247,7 @@ export default {
   mounted() {
     // setTimeout(() => {
     // this.loading = true;
-
+    this.$ga.page("/");
     if (this.options) {
       this.getFixture();
     }

@@ -87,6 +87,7 @@ import axios from "axios";
 import { mapActions } from "vuex";
 export default {
   mounted() {
+    this.$ga.page("/register");
     this.fetchData();
   },
   data: () => ({

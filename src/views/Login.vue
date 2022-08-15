@@ -107,5 +107,8 @@ export default {
       }
     },
   },
+  mounted() {
+    this.$ga.page("/login");
+  },
 };
 </script>

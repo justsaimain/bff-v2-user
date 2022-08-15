@@ -132,6 +132,8 @@ export default {
     },
   },
   mounted() {
+    this.$ga.page("/verify");
+
     let number = this.getNumber;
     if (!number) {
       this.$router.replace({ name: "Register" });

@@ -80,14 +80,7 @@
                 <v-card class="pa-3 predictor-card" elevation="0">
                   <div class="predictor-badge">{{ index + 2 }}</div>
                   <div
-                    class="
-                      mt-5
-                      d-flex
-                      align-center
-                      justify-space-between
-                      flex-1
-                      mx-10
-                    "
+                    class="mt-5 d-flex align-center justify-space-between flex-1 mx-10"
                   >
                     <div class="d-flex flex-column align-center justify-start">
                       <v-avatar size="50" class="predictor-avatar">
@@ -291,6 +284,8 @@ export default {
     },
   },
   mounted() {
+    this.$ga.page("/leaderboard");
+
     if (this.teams) {
       console.log(this.teams);
     }
