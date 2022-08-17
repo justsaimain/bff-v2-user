@@ -36,7 +36,7 @@ const options = {
 
 Vue.use(VueProgressBar, options);
 Vue.use(VueAnalytics, {
-  id: "G-B874WPCCVC",
+  id: "UA-236555968-1",
   router,
 });
 axios.defaults.baseURL = "https://backend.bffsports.com/api";
