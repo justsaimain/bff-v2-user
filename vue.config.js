@@ -3,16 +3,16 @@ module.exports = {
   pwa: {
     name: "BFF",
     themeColor: "#4c2fe3",
-    msTileColor: "#000000",
+    msTileColor: "#4c2fe3",
     appleMobileWebAppCapable: "yes",
-    appleMobileWebAppStatusBarStyle: "black",
+    appleMobileWebAppStatusBarStyle: "#4c2fe3",
 
     // configure the workbox plugin
-    // workboxPluginMode: "InjectManifest",
-    // workboxOptions: {
-    // swSrc is required in InjectManifest mode.
-    //   swSrc: "dev/sw.js",
-    // ...other Workbox options...
-    // },
+    workboxPluginMode: "InjectManifest",
+    workboxOptions: {
+      // swSrc is required in InjectManifest mode.
+      swSrc: "src/service-worker.js",
+      // ...other Workbox options...
+    },
   },
 };
