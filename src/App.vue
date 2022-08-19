@@ -75,6 +75,25 @@
     <sneck-bar></sneck-bar>
     <m-dialog></m-dialog>
     <router-view />
+    <div class="update-dialog" v-if="prompt">
+      <div class="update-dialog__content">
+        A new version is found. Refresh to load it?
+      </div>
+      <div class="update-dialog__actions">
+        <button
+          class="update-dialog__button update-dialog__button--confirm"
+          @click="update"
+        >
+          Update
+        </button>
+        <button
+          class="update-dialog__button update-dialog__button--cancel"
+          @click="prompt = false"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
     <!-- <vue-progress-bar></vue-progress-bar> -->
   </v-app>
 </template>
@@ -95,6 +114,7 @@ export default {
   },
   data: () => ({
     isOffline: false,
+    prompt: false,
   }),
   mounted() {
     this.$Progress.finish();
@@ -120,10 +140,19 @@ export default {
         path: path,
       });
     },
+    async update() {
+      this.prompt = false;
+      await this.$workbox.messageSW({ type: "SKIP_WAITING" });
+    },
   },
   created() {
     //  [App.vue specific] When App.vue is first loaded start the progress bar
     this.$Progress.start();
+    if (this.$workbox) {
+      this.$workbox.addEventListener("waiting", () => {
+        this.prompt = true;
+      });
+    }
   },
 };
 </script>
