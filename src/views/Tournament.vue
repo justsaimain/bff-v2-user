@@ -171,6 +171,17 @@
               class="fixtures-container"
               style="margin-bottom: 80px"
             >
+              <v-alert
+                v-if="!this.check2xBoostedExist"
+                dense
+                class="mt-3"
+                outlined
+                text
+                type="success"
+              >
+                Use 2x Booster to double you points.
+              </v-alert>
+
               <div
                 v-for="fixture in fixtures"
                 :key="fixture.code"
@@ -357,6 +368,17 @@ export default {
       alert: "general/getAlert",
       authenticated: "auth/authenticated",
     }),
+    check2xBoostedExist() {
+      const boosted = this.fixtures.filter((f) => {
+        return f.used_booster === true;
+      });
+
+      if (boosted.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   methods: {
     moment,
@@ -672,5 +694,15 @@ export default {
   justify-content: center;
   flex: 2;
   align-content: center;
+}
+
+.booster-alert {
+  border: 1px solid #cee9d2;
+  margin-top: 10px;
+  background: #eaf7ef;
+  border-radius: 4px;
+  padding: 10px;
+  color: #323c44;
+  font-size: 14px;
 }
 </style>

@@ -10,6 +10,7 @@ import VsToast from "@vuesimple/vs-toast";
 import VueProgressBar from "vue-progressbar";
 import VueScrollPicker from "vue-scroll-picker";
 import VueAnalytics from "vue-analytics";
+import Hotjar from "vue-hotjar";
 
 Vue.use(VueScrollPicker);
 
@@ -39,8 +40,13 @@ Vue.use(VueAnalytics, {
   id: "UA-236555968-1",
   router,
 });
-axios.defaults.baseURL = "https://backend.bffsports.com/api";
-// axios.defaults.baseURL = "http://127.0.0.1:8000/api";
+Vue.use(Hotjar, {
+  id: "3112019", // Hotjar Site ID
+  // isProduction: true,
+  snippetVersion: 6,
+});
+// axios.defaults.baseURL = "https://backend.bffsports.com/api";
+axios.defaults.baseURL = "http://127.0.0.1:8000/api";
 axios.defaults.headers.common["x-rapidapi-host"] =
   "fantasy-premier-league3.p.rapidapi.com";
 axios.defaults.headers.common["x-rapidapi-key"] =

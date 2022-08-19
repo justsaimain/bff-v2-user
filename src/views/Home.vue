@@ -69,6 +69,35 @@
                 :data="homeData.recent_matchs"
               ></recent-matches>
             </template>
+            <div class="mt-5" v-if="!loading && homeData">
+              <p class="small-page-title">Game Week 2 Deadline</p>
+              <v-card
+                elevation="0"
+                class="gameweek-deadline-card"
+                color="primary"
+              >
+                <p class="text-center">Don't miss your chance</p>
+                <div class="gameweek-deadline-div" v-if="homeData.deadline">
+                  <div class="d-flex flex-column justify-center align-center">
+                    <h3>{{ homeData.deadline.days }}</h3>
+                    <p>Days</p>
+                  </div>
+                  <div class="d-flex flex-column justify-center align-center">
+                    <h3>{{ homeData.deadline.hours }}</h3>
+                    <p>Hours</p>
+                  </div>
+                  <div class="d-flex flex-column justify-center align-center">
+                    <h3>{{ homeData.deadline.minutes }}</h3>
+                    <p>Mins</p>
+                  </div>
+                </div>
+                <div class="text-center mt-5">
+                  <v-btn class="white predict-now-btn" to="/tournament"
+                    >Predict Now</v-btn
+                  >
+                </div>
+              </v-card>
+            </div>
             <div class="mt-5" v-if="homeData && homeData.top_predictor">
               <p class="small-page-title">
                 Game Week {{ homeData && homeData.current_gameweek }} Top
@@ -105,33 +134,7 @@
                 </div>
               </v-card>
             </div>
-            <div class="mt-5">
-              <p class="small-page-title">Game Week 2 Deadline</p>
-              <v-card
-                elevation="0"
-                class="gameweek-deadline-card"
-                color="primary"
-              >
-                <p class="text-center">Don't miss your chance</p>
-                <div class="gameweek-deadline-div">
-                  <div class="d-flex flex-column justify-center align-center">
-                    <h3>02</h3>
-                    <p>Days</p>
-                  </div>
-                  <div class="d-flex flex-column justify-center align-center">
-                    <h3>11</h3>
-                    <p>Hours</p>
-                  </div>
-                  <div class="d-flex flex-column justify-center align-center">
-                    <h3>31</h3>
-                    <p>Mins</p>
-                  </div>
-                </div>
-                <div class="text-center mt-5">
-                  <v-btn class="white predict-now-btn">Predict Now</v-btn>
-                </div>
-              </v-card>
-            </div>
+
             <div class="mt-5" style="margin-bottom: 80px">
               <v-carousel
                 cycle
@@ -316,7 +319,7 @@ export default {
 
 .top-predictor-avatar {
   border-radius: 100% !important;
-  outline: 2px solid #4c2fe3;
+  /* outline: 2px solid #4c2fe3; */
 }
 
 .top-predictor-name {

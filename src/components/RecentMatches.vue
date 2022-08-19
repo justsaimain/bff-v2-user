@@ -1,7 +1,7 @@
 <template>
   <div class="mt-5">
     <p class="small-page-title">Recent Matches</p>
-    <div class="recent-matches-div">
+    <div v-if="this.data.length > 0" class="recent-matches-div">
       <v-card
         v-for="match in this.data"
         :key="match.id"
@@ -86,5 +86,12 @@ export default {
 .recent-match-team span {
   font-size: 13px;
   letter-spacing: 0.5px;
+}
+
+.no-recent-match {
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 0px;
 }
 </style>
