@@ -1,5 +1,4 @@
 import axios from "axios";
-import router from "../router";
 
 export default {
   namespaced: true,
@@ -59,7 +58,6 @@ export default {
         .catch((e) => {
           commit("SET_TOKEN", null);
           commit("SET_USER", null);
-          router.replace("/");
           console.log(e);
         });
     },

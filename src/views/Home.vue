@@ -70,7 +70,9 @@
               ></recent-matches>
             </template>
             <div class="mt-5" v-if="!loading && homeData">
-              <p class="small-page-title">Game Week 2 Deadline</p>
+              <p class="small-page-title">
+                Game Week {{ homeData && homeData.current_gameweek }} Deadline
+              </p>
               <v-card
                 elevation="0"
                 class="gameweek-deadline-card"
