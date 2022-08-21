@@ -329,7 +329,7 @@ export default {
   letter-spacing: 0.3px;
 }
 .predictor-avatar {
-  outline: 2px solid #fff;
+  /* outline: 2px solid #fff; */
   /* border: 2px solid #4c2fe3; */
 }
 

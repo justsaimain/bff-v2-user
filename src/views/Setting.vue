@@ -296,7 +296,6 @@ export default {
 .avatar {
   display: absolute;
   border-radius: 100% !important;
-  outline: 2px solid #fff;
   border: 3px solid #4c2fe3;
   top: 30px;
 }
