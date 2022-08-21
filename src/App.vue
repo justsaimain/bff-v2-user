@@ -72,9 +72,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar bottom text timeout="-1" :value="updateExists" color="primary">
+    <v-snackbar bottom timeout="-1" :value="updateExists" color="primary">
       An update is available
-      <v-btn class="text-right" text @click="refreshApp">Update</v-btn>
+      <v-btn class="float-right" text @click="refreshApp">Update</v-btn>
     </v-snackbar>
     <sneck-bar></sneck-bar>
     <m-dialog></m-dialog>
