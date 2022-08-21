@@ -11,9 +11,6 @@ import VueProgressBar from "vue-progressbar";
 import VueScrollPicker from "vue-scroll-picker";
 import VueAnalytics from "vue-analytics";
 import Hotjar from "vue-hotjar";
-import wb from "./registerServiceWorker";
-
-Vue.prototype.$workbox = wb;
 
 Vue.use(VueScrollPicker);
 

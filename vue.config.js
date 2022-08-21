@@ -6,7 +6,6 @@ module.exports = {
     msTileColor: "#4c2fe3",
     appleMobileWebAppCapable: "yes",
     appleMobileWebAppStatusBarStyle: "#4c2fe3",
-
     // configure the workbox plugin
     workboxPluginMode: "InjectManifest",
     workboxOptions: {

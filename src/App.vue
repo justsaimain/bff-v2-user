@@ -72,6 +72,16 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar
+      bottom
+      right
+      :value="updateExists"
+      :timeout="-1"
+      color="primary"
+    >
+      An update is available
+      <v-btn text @click="refreshApp"> Update </v-btn>
+    </v-snackbar>
     <sneck-bar></sneck-bar>
     <m-dialog></m-dialog>
     <router-view />
@@ -102,6 +112,8 @@
 import { mapActions, mapGetters } from "vuex";
 import MDialog from "./components/MDialog.vue";
 import SneckBar from "./components/SneckBar.vue";
+import update from "./mixins/update";
+
 export default {
   components: { SneckBar, MDialog },
   name: "App",
@@ -125,6 +137,13 @@ export default {
       showNoAuthAlert: "general/showNoAuthAlert",
       hideNoAuthAlert: "general/hideNoAuthAlert",
     }),
+    refreshApp() {
+      this.updateExists = false;
+      // Make sure we only send a 'skip waiting' message if the SW is waiting
+      if (!this.registration || !this.registration.waiting) return;
+      // Send message to SW to skip the waiting and activate the new SW
+      this.registration.waiting.postMessage({ type: "SKIP_WAITING" });
+    },
     reloadPage() {
       window.location.reload();
     },
@@ -154,6 +173,7 @@ export default {
       });
     }
   },
+  mixins: [update],
 };
 </script>
 

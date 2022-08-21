@@ -1,7 +1,8 @@
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
-workbox.precaching.suppressWarnings();
-Workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+// If you are using 'GenerateSW' (default) for your workboxPluginMode setting this file is auto generated for you.
+// If you are using 'InjectManifest' then add this to your custom SW after your standard workbox config
 
 self.addEventListener("message", (event) => {
-  if (event.data.action == "SKIP_WAITING") self.skipWaiting();
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
