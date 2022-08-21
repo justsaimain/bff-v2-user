@@ -142,35 +142,15 @@
                 interval="3000"
                 hide-delimiters
                 hide-delimiter-background
-                show-arrows-on-hover
+                :show-arrows="false"
               >
-                <v-carousel-item>
+                <v-carousel-item
+                  href="https://www.facebook.com/shinthant.naing.501"
+                  target="_blank"
+                >
                   <v-sheet height="100%">
                     <v-row class="fill-height" align="center" justify="center">
-                      <v-img
-                        src="https://dc6vmiz8c91pk.cloudfront.net/media/142/39541590099449/fpl_banner_v2.png"
-                      >
-                      </v-img>
-                    </v-row>
-                  </v-sheet>
-                </v-carousel-item>
-                <v-carousel-item>
-                  <v-sheet height="100%">
-                    <v-row class="fill-height" align="center" justify="center">
-                      <v-img
-                        src="https://dc6vmiz8c91pk.cloudfront.net/media/142/39541590099449/fpl_banner_v2.png"
-                      >
-                      </v-img>
-                    </v-row>
-                  </v-sheet>
-                </v-carousel-item>
-                <v-carousel-item>
-                  <v-sheet height="100%">
-                    <v-row class="fill-height" align="center" justify="center">
-                      <v-img
-                        src="https://dc6vmiz8c91pk.cloudfront.net/media/142/39541590099449/fpl_banner_v2.png"
-                      >
-                      </v-img>
+                      <v-img src="../assets/banners/aspire_shin.jpeg"> </v-img>
                     </v-row>
                   </v-sheet>
                 </v-carousel-item>
