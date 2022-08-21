@@ -1,7 +1,7 @@
 <template>
   <div class="mt-5">
+    <p v-if="this.data.length > 0" class="small-page-title">Recent Matches</p>
     <div v-if="this.data.length > 0" class="recent-matches-div">
-      <p class="small-page-title">Recent Matches</p>
       <v-card
         v-for="match in this.data"
         :key="match.id"
