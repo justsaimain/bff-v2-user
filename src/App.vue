@@ -74,7 +74,9 @@
     </v-dialog>
     <v-snackbar bottom timeout="-1" :value="updateExists" color="primary">
       An update is available
-      <v-btn class="float-right" text @click="refreshApp">Update</v-btn>
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="refreshApp">Update</v-btn>
+      </template>
     </v-snackbar>
     <sneck-bar></sneck-bar>
     <m-dialog></m-dialog>
