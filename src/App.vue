@@ -124,8 +124,12 @@ export default {
     isOffline: false,
     prompt: false,
   }),
-  mounted() {
+  async mounted() {
     this.$Progress.finish();
+    const relatedApps = await navigator.getInstalledRelatedApps();
+    relatedApps.forEach((app) => {
+      console.log(app.id, app.platform, app.url);
+    });
   },
   methods: {
     ...mapActions({
