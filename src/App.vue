@@ -129,7 +129,7 @@ export default {
     console.log("Related App...");
     const relatedApps = await navigator.getInstalledRelatedApps();
     relatedApps.forEach((app) => {
-      alert(app.url);
+      console.log(app.id, app.platform, app.url);
     });
     console.log("Related App Finished...");
   },
