@@ -1004,6 +1004,14 @@
   "resolved" "https://registry.npmjs.org/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz"
   "version" "1.1.3"
 
+"@owliehq/vue-addtohomescreen@^1.4.1":
+  "integrity" "sha512-hMt6QSoHcK2Np9NEzGXuwd2jh5vRFICACBVSSs2pQDD/UmGL+H+453w6VWjvZOVP1go4/ZPRhfnM34i9zZ0mfQ=="
+  "resolved" "https://registry.npmjs.org/@owliehq/vue-addtohomescreen/-/vue-addtohomescreen-1.4.1.tgz"
+  "version" "1.4.1"
+  dependencies:
+    "js-cookie" "^2.2.1"
+    "ua-parser-js" "^0.7.21"
+
 "@soda/friendly-errors-webpack-plugin@^1.7.1":
   "integrity" "sha512-h2ooWqP8XuFqTXT+NyAFbrArzfQA7R6HTezADrvD9Re8fxMLTPPniLdqVTdDaO0eIoLaAwKT+d6w+5GeTk7Vbg=="
   "resolved" "https://registry.npmjs.org/@soda/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-1.8.1.tgz"
@@ -5412,6 +5420,11 @@
   "resolved" "https://registry.npmjs.org/js-base64/-/js-base64-2.6.4.tgz"
   "version" "2.6.4"
 
+"js-cookie@^2.2.1":
+  "integrity" "sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ=="
+  "resolved" "https://registry.npmjs.org/js-cookie/-/js-cookie-2.2.1.tgz"
+  "version" "2.2.1"
+
 "js-cookie@^3.0.1":
   "integrity" "sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw=="
   "resolved" "https://registry.npmjs.org/js-cookie/-/js-cookie-3.0.1.tgz"
@@ -8774,6 +8787,11 @@
   "resolved" "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   "version" "0.0.6"
 
+"ua-parser-js@^0.7.21":
+  "integrity" "sha512-qLK/Xe9E2uzmYI3qLeOmI0tEOt+TBBQyUIAh4aAgU05FVYzeZrKUdkAZfBNVGRaHVgV0TDkdEngJSw/SyQchkQ=="
+  "resolved" "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.31.tgz"
+  "version" "0.7.31"
+
 "uglify-js@3.4.x":
   "integrity" "sha512-Y2VsbPVs0FIshJztycsO2SfPk7/KAF/T72qzv9u5EpQ4kB2hQoHlhNQTsNyy6ul7lQtqJN/AoWeS23OzEiEFxw=="
   "resolved" "https://registry.npmjs.org/uglify-js/-/uglify-js-3.4.10.tgz"
@@ -9087,6 +9105,11 @@
   "resolved" "https://registry.npmjs.org/vue-progressbar/-/vue-progressbar-0.7.5.tgz"
   "version" "0.7.5"
 
+"vue-pwa-install@^1.1.0":
+  "integrity" "sha512-0zNt7DGSBvLyVntTAsbshvGDAaa27pKCB4P5Fs0UkaLCmZTt11T6clxcPFSOL3VWduSPl44abuig+zWWL/b1Cw=="
+  "resolved" "https://registry.npmjs.org/vue-pwa-install/-/vue-pwa-install-1.1.0.tgz"
+  "version" "1.1.0"
+
 "vue-router@^3.2.0":
   "integrity" "sha512-FUlILrW3DGitS2h+Xaw8aRNvGTwtuaxrRkNSHWTizOfLUie7wuYwezeZ50iflRn8YPV5kxmU2LQuu3nM/b3Zsg=="
   "resolved" "https://registry.npmjs.org/vue-router/-/vue-router-3.5.3.tgz"
@@ -9130,7 +9153,7 @@
   "resolved" "https://registry.npmjs.org/vue-wheel-picker/-/vue-wheel-picker-0.3.2.tgz"
   "version" "0.3.2"
 
-"vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.5.16", "vue@^2.6.11", "vue@^2.6.12", "vue@^2.6.4", "vue@>=1.x.x":
+"vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.5.16", "vue@^2.6.11", "vue@^2.6.12", "vue@^2.6.4", "vue@>=1.x.x", "vue@>=2":
   "integrity" "sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-2.6.14.tgz"
   "version" "2.6.14"

@@ -173,10 +173,12 @@ import RecentMatches from "../components/RecentMatches.vue";
 import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 import PWAPrompt from "vue2-ios-pwa-prompt";
+import env from "../env";
 
 export default {
   components: { TopNav, RecentMatches, BottomNavigation, PWAPrompt },
   data: () => ({
+    env,
     loading: false,
     welcome: true,
     homeData: null,

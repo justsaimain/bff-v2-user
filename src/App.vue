@@ -81,26 +81,6 @@
     <sneck-bar></sneck-bar>
     <m-dialog></m-dialog>
     <router-view />
-    <div class="update-dialog" v-if="prompt">
-      <div class="update-dialog__content">
-        A new version is found. Refresh to load it?
-      </div>
-      <div class="update-dialog__actions">
-        <button
-          class="update-dialog__button update-dialog__button--confirm"
-          @click="update"
-        >
-          Update
-        </button>
-        <button
-          class="update-dialog__button update-dialog__button--cancel"
-          @click="prompt = false"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-    <!-- <vue-progress-bar></vue-progress-bar> -->
   </v-app>
 </template>
 
@@ -125,7 +105,6 @@ export default {
     prompt: false,
   }),
   async mounted() {
-    this.$Progress.finish();
     console.log("Related App...");
     const relatedApps = await navigator.getInstalledRelatedApps();
     relatedApps.forEach((app) => {
