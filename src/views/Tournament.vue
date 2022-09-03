@@ -291,25 +291,30 @@
                       </span>
                     </div>
                   </div>
-                  <div
-                    v-if="fixture.finished"
-                    class="d-flex justify-center mt-3 align-center"
-                  >
-                    <div class="primary-badge mr-3">
-                      Result
+                  <div class="d-flex justify-center mt-3 align-center">
+                    <template v-if="fixture.finished">
+                      <div class="primary-badge mr-3">
+                        Result
+                        {{ fixture.team_h_score }} :
+                        {{ fixture.team_a_score }}
+                      </div>
+                      <div v-if="fixture.result_pts" class="primary-badge mr-3">
+                        You got + {{ fixture.result_pts }} pts
+                      </div>
+                    </template>
+                    <div
+                      v-if="fixture.started && !fixture.finished"
+                      class="primary-badge mr-3"
+                    >
+                      Live Score
                       {{ fixture.team_h_score }} :
                       {{ fixture.team_a_score }}
                     </div>
-                    <div v-if="fixture.result_pts" class="primary-badge mr-3">
-                      You got + {{ fixture.result_pts }} pts
-                    </div>
-                    <div v-if="fixture.prediction">
-                      <div
-                        v-if="fixture.prediction.twox_booster"
-                        class="primary-badge"
-                      >
-                        2x Boosted
-                      </div>
+                    <div
+                      v-if="fixture.prediction.twox_booster"
+                      class="primary-badge"
+                    >
+                      2x Boosted
                     </div>
                   </div>
                 </v-card>
@@ -370,7 +375,7 @@ export default {
     }),
     check2xBoostedExist() {
       const boosted = this.fixtures.filter((f) => {
-        return f.used_booster === true;
+        return f.prediction.twox_booster === 1;
       });
 
       if (boosted.length > 0) {

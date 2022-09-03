@@ -31,7 +31,7 @@
                   },
                   `gw-tab-${gameWeekTab}`,
                 ]"
-                @click="reloadGameWeek(gameWeekTab, false)"
+                @click="reloadGameWeek(gameWeekTab, true)"
               >
                 Game Week {{ gameWeekTab }}
               </v-btn>
@@ -196,7 +196,7 @@ export default {
     ...mapActions({
       showSnackbarAction: "alert/showSnackbarAction",
     }),
-    reloadGameWeek(gw, showLoading) {
+    async reloadGameWeek(gw, showLoading) {
       this.leaderboard = null;
       this.top_one = null;
       this.loading = showLoading;

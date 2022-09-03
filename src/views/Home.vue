@@ -52,17 +52,21 @@
                     <p class="mb-0">Highest</p>
                   </v-col>
                 </v-row>
-                <!-- <v-divider class="my-3"></v-divider>
-                <v-row class="px-3" justify="center" align="center">
-                  <v-col> </v-col>
-                  <v-col class="text-end">
-                    <v-btn class="primary view-detail-btn" small
-                      >View Detail
+                <v-row
+                  v-if="!authenticated && user == null"
+                  class="px-3"
+                  justify="center"
+                  align="center"
+                >
+                  <v-col class="text-center">
+                    <v-btn to="/register" class="primary view-detail-btn"
+                      >Sign Up Now
                     </v-btn>
                   </v-col>
-                </v-row> -->
+                </v-row>
               </v-card>
             </div>
+
             <template v-if="!loading && homeData">
               <recent-matches
                 v-if="homeData.recent_matchs"
@@ -290,8 +294,9 @@ export default {
 
 .view-detail-btn {
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 700;
   text-transform: capitalize;
+  width: 100%;
 }
 
 .top-predictor-card {
