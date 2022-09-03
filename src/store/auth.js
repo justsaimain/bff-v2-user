@@ -41,7 +41,7 @@ export default {
       commit("STORE_NUMBER", extra.number);
       commit("STORE_REQUEST_ID", extra.request_id);
     },
-    attemptLogin({ state, commit }, token) {
+    async attemptLogin({ state, commit }, token) {
       if (token) {
         commit("SET_TOKEN", token);
       }
@@ -61,11 +61,11 @@ export default {
           console.log(e);
         });
     },
-    storeUser({ commit }, data) {
+    async storeUser({ commit }, data) {
       commit("SET_USER", data);
       return true;
     },
-    Logout({ commit }) {
+    async Logout({ commit }) {
       return axios.post("auth/logout").then(() => {
         commit("SET_TOKEN", null);
         commit("SET_USER", null);
