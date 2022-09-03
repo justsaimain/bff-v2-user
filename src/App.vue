@@ -106,11 +106,11 @@ export default {
   }),
   async mounted() {
     console.log("Related App...");
-    const relatedApps = await navigator.getInstalledRelatedApps();
-    relatedApps.forEach((app) => {
-      console.log(app.id, app.platform, app.url);
-    });
-    console.log("Related App Finished...");
+    // const relatedApps = await navigator.getInstalledRelatedApps();
+    // relatedApps.forEach((app) => {
+    //   console.log(app.id, app.platform, app.url);
+    // });
+    // console.log("Related App Finished...");
   },
   methods: {
     ...mapActions({
