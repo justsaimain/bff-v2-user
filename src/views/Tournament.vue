@@ -303,6 +303,18 @@
                       </div>
                     </template>
                     <div
+                      v-if="
+                        fixture.started &&
+                        !fixture.finished &&
+                        !fixture.prediction
+                      "
+                      class="primary-badge mr-3"
+                    >
+                      Predict
+                      {{ fixture.prediction.team_h_goal.text }} :
+                      {{ fixture.prediction.team_a_goal.text }}
+                    </div>
+                    <div
                       v-if="fixture.started && !fixture.finished"
                       class="primary-badge mr-3"
                     >
