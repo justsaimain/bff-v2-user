@@ -88,9 +88,7 @@ export default {
                 message: "Successfully login!",
               });
               this.attemptLogin(response.data.token);
-              setTimeout(() => {
-                window.location.href = "/";
-              }, 500);
+
               this.loading = false;
             } else {
               this.showSnackbarAction({
@@ -99,6 +97,10 @@ export default {
               });
               this.loading = false;
             }
+
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 1000);
           })
           .catch((e) => {
             console.log(e);
