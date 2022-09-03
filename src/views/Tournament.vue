@@ -375,7 +375,9 @@ export default {
     }),
     check2xBoostedExist() {
       const boosted = this.fixtures.filter((f) => {
-        return f?.prediction?.twox_booster === 1;
+        if (f.prediction) {
+          return f.prediction.twox_booster === 1;
+        }
       });
 
       if (boosted.length > 0) {
