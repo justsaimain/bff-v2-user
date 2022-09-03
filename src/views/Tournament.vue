@@ -410,11 +410,11 @@ export default {
           console.log(res.data);
           this.fixtures = res.data;
           let filteredPredictionNullFixtures = this.fixtures.filter(
-            (x) => x.prediction != null
+            (x) => x?.prediction != null
           );
 
           let check2xBoosted = filteredPredictionNullFixtures.find(
-            (e) => e.prediction.twox_booster == 1
+            (e) => e?.prediction?.twox_booster == 1
           );
 
           if (check2xBoosted) {
