@@ -303,11 +303,7 @@
                       </div>
                     </template>
                     <div
-                      v-if="
-                        fixture.started &&
-                        !fixture.finished &&
-                        !fixture.prediction
-                      "
+                      v-if="fixture.started && !fixture.finished"
                       class="primary-badge mr-3"
                     >
                       Predict
