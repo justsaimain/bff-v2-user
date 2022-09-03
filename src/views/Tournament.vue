@@ -375,9 +375,7 @@ export default {
     }),
     check2xBoostedExist() {
       const boosted = this.fixtures.filter((f) => {
-        if (f.prediction) {
-          return f.prediction.twox_booster === 1;
-        }
+        return f.used_booster === true;
       });
 
       if (boosted.length > 0) {
@@ -412,11 +410,11 @@ export default {
           console.log(res.data);
           this.fixtures = res.data;
           let filteredPredictionNullFixtures = this.fixtures.filter(
-            (x) => x?.prediction != null
+            (x) => x.prediction != null
           );
 
           let check2xBoosted = filteredPredictionNullFixtures.find(
-            (e) => e?.prediction?.twox_booster == 1
+            (e) => e.prediction.twox_booster == 1
           );
 
           if (check2xBoosted) {
@@ -455,11 +453,11 @@ export default {
           console.log(res.data);
 
           let filteredPredictionNullFixtures = this.fixtures.filter(
-            (x) => x?.prediction != null
+            (x) => x.prediction != null
           );
 
           let check2xBoosted = filteredPredictionNullFixtures.find(
-            (e) => e?.prediction.twox_booster == 1
+            (e) => e.prediction.twox_booster == 1
           );
 
           if (check2xBoosted) {
@@ -518,7 +516,7 @@ export default {
           value: 0,
           visibility: true,
         };
-        if (fixture?.prediction != null) {
+        if (fixture.prediction != null) {
           this.predictionForm.home_team_goal = fixture.prediction.team_h_goal;
           this.predictionForm.away_team_goal = fixture.prediction.team_a_goal;
           this.predictionForm.twox_booster = fixture.prediction.twox_booster;
