@@ -311,7 +311,9 @@
                       {{ fixture.team_a_score }}
                     </div>
                     <div
-                      v-if="fixture.prediction.twox_booster"
+                      v-if="
+                        fixture.prediction && fixture.prediction.twox_booster
+                      "
                       class="primary-badge"
                     >
                       2x Boosted
@@ -378,6 +380,7 @@ export default {
         return f.used_booster === true;
       });
 
+      console.log(boosted);
       if (boosted.length > 0) {
         return true;
       } else {

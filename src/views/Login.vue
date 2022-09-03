@@ -73,7 +73,7 @@ export default {
       attemptLogin: "auth/attemptLogin",
       showSnackbarAction: "alert/showSnackbarAction",
     }),
-    login() {
+    async login() {
       if (this.$refs.form.validate()) {
         this.loading = true;
 
