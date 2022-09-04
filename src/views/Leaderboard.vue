@@ -15,6 +15,32 @@
           ></v-progress-circular
         ></v-card>
       </v-dialog>
+      <v-dialog v-model="showDetailDialog" width="600px">
+        <v-card v-if="detailDialogData">
+          <v-card-title>
+            <span class="text-h5">{{ detailDialogData.user.name }}</span>
+          </v-card-title>
+          <v-card-text
+            v-for="(d, index) in detailDialogData.point_logs"
+            :key="index"
+          >
+            <p>{{ index }}</p>
+            <div v-for="(log, index) in d" :key="index">
+              <p>{{ log }}</p>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="showDetailDialog = false"
+            >
+              Agree
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-container>
         <v-row class="">
           <v-col cols="12">
@@ -37,7 +63,7 @@
               </v-btn>
             </div>
             <div class="mb-16">
-              <div class="mt-5" v-if="top_one">
+              <div class="mt-5" v-if="top_one" @click="checkDetail(top_one)">
                 <v-card class="pa-3 top-predictor-card" elevation="0">
                   <div
                     class="mt-5 d-flex align-center justify-space-between mx-10"
@@ -76,7 +102,12 @@
                   </div>
                 </v-card>
               </div>
-              <div v-for="(p, index) in leaderboard" :key="p.id" class="mt-5">
+              <div
+                v-for="(p, index) in leaderboard"
+                :key="p.id"
+                class="mt-5"
+                @click="checkDetail(p)"
+              >
                 <v-card class="pa-3 predictor-card" elevation="0">
                   <div class="predictor-badge">{{ index + 2 }}</div>
                   <div
@@ -188,6 +219,8 @@ export default {
     top_one: null,
     leaderboard: null,
     loading: true,
+    showDetailDialog: false,
+    detailDialogData: null,
   }),
   ...mapGetters({
     teams: "teams/teams",
@@ -235,7 +268,7 @@ export default {
           console.log(e);
         });
     },
-    fetchData() {
+    async fetchData() {
       this.totalGameWeek = JSON.parse(
         localStorage.getItem("options")
       ).total_gameweek;
@@ -246,6 +279,7 @@ export default {
       axios
         .get("/leaderboard", { params: { gw: this.gameWeek } })
         .then((res) => {
+          console.log(res.data.data);
           if (res.data.data.length > 0) {
             this.leaderboard = res.data.data;
             this.top_one = this.leaderboard.shift();
@@ -281,6 +315,11 @@ export default {
       if (this.teams) {
         return this.teams.find((x) => x.code == id).name;
       }
+    },
+    async checkDetail(data) {
+      // this.showDetailDialog = true;
+      console.log(data);
+      // this.detailDialogData = data;
     },
   },
   mounted() {
