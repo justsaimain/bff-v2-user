@@ -21,8 +21,8 @@
               <v-icon>mdi-arrow-left-thin</v-icon>
               Go Back
             </v-btn>
-            <h3>Login</h3>
-            <v-form ref="form">
+            <h3>Forget Password</h3>
+            <v-form v-if="!getOTP" ref="form">
               <div class="mt-5">
                 <v-text-field
                   label="Phone Number"
@@ -30,27 +30,40 @@
                   :rules="phoneRules"
                   v-model="form.phone"
                 ></v-text-field>
+                <v-btn
+                  :disabled="!valid"
+                  color="primary"
+                  class="mr-2"
+                  @click="getCode"
+                >
+                  Get Code
+                </v-btn>
+                <v-btn to="/login" plain> Login Account </v-btn>
+              </div>
+            </v-form>
+            <v-form v-else ref="form">
+              <div class="mt-5">
                 <v-text-field
-                  label="Password"
+                  label="Verification Code"
                   outlined
-                  v-model="form.password"
+                  :rules="otpRules"
+                  v-model="form.code"
+                ></v-text-field>
+                <v-text-field
+                  label="New Password"
+                  outlined
                   :rules="passwordRules"
+                  v-model="form.password"
                 ></v-text-field>
                 <v-btn
                   :disabled="!valid"
                   color="primary"
                   class="mr-2"
-                  @click="login"
+                  @click="changePassword"
                 >
-                  Login
+                  Change Password
                 </v-btn>
-
-                <div class="mt-3 text-center">
-                  <v-btn to="/forget-password" plain> Forget Password </v-btn>
-                </div>
-                <div class="mt-3 text-center">
-                  <v-btn to="/register" plain> Register Account </v-btn>
-                </div>
+                <v-btn to="/login" plain> Login Account </v-btn>
               </div>
             </v-form>
           </v-col>
@@ -63,50 +76,84 @@
 import axios from "axios";
 import { mapActions } from "vuex";
 export default {
-  components: {},
   data: () => ({
     loading: false,
     valid: true,
     form: {
+      code: "",
       phone: "",
       password: "",
     },
+    getOTP: false,
     phoneRules: [(v) => !!v || "Phone is required"],
     passwordRules: [(v) => !!v || "Password is required"],
+    otpRules: [(v) => !!v || "OTP Code is required"],
   }),
   methods: {
     ...mapActions({
       attemptLogin: "auth/attemptLogin",
       showSnackbarAction: "alert/showSnackbarAction",
     }),
-    async login() {
+    async changePassword() {
       if (this.$refs.form.validate()) {
         this.loading = true;
 
         axios
-          .post("auth/login", this.form)
+          .post("auth/forget-verify", this.form)
           .then((res) => {
-            console.log(res);
             let response = res.data;
             if (response.success == true) {
               this.showSnackbarAction({
                 show: true,
-                message: "Successfully login!",
+                message: response.message,
               });
-              this.attemptLogin(response.data.token);
 
               this.loading = false;
+
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 500);
             } else {
               this.showSnackbarAction({
                 show: true,
-                message: "Wrong Phone number or Password!",
+                message: response.message,
               });
               this.loading = false;
             }
+          })
+          .catch((e) => {
+            console.log(e);
+            this.loading = false;
+          });
+      }
+    },
+    async getCode() {
+      if (this.$refs.form.validate()) {
+        this.loading = true;
 
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 1000);
+        axios
+          .post("auth/forget-password", this.form)
+          .then((res) => {
+            let response = res.data;
+            if (response.success == true) {
+              this.showSnackbarAction({
+                show: true,
+                message: "OTP Send",
+              });
+
+              this.getOTP = true;
+              this.loading = false;
+            } else {
+              if (response.flag == "already_exist") {
+                this.getOTP = true;
+              }
+
+              this.showSnackbarAction({
+                show: true,
+                message: response.message,
+              });
+              this.loading = false;
+            }
           })
           .catch((e) => {
             console.log(e);
@@ -116,7 +163,7 @@ export default {
     },
   },
   mounted() {
-    this.$ga.page("/login");
+    this.$ga.page("/forget-password");
   },
 };
 </script>
