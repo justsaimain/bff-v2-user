@@ -230,8 +230,6 @@ export default {
         GameWeekTabScrollTo.scrollTo(`.gw-tab-${this.gameWeek}`, 5000, options);
       });
       this.loading = false;
-
-      console.log(data);
     },
     getTeamVS(data) {
       const dArr = data.split(" ");
@@ -260,8 +258,6 @@ export default {
     this.gameWeek = JSON.parse(
       localStorage.getItem("options")
     ).current_gameweek;
-
-    console.log("gw", this.gameWeek);
 
     this.fetchData();
 
