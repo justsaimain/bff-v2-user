@@ -303,7 +303,11 @@
                       </div>
                     </template>
                     <div
-                      v-if="fixture.started && !fixture.finished"
+                      v-if="
+                        fixture.started &&
+                        !fixture.finished &&
+                        fixture.prediction
+                      "
                       class="primary-badge mr-3"
                     >
                       Predict
@@ -320,7 +324,8 @@
                     </div>
                     <div
                       v-if="
-                        fixture.prediction && fixture.prediction.twox_booster
+                        fixture.prediction &&
+                        fixture.prediction.twox_booster === 1
                       "
                       class="primary-badge"
                     >
@@ -385,7 +390,9 @@ export default {
     }),
     check2xBoostedExist() {
       const boosted = this.fixtures.filter((f) => {
-        return f.used_booster === true;
+      if(f.prediction){
+        return f.prediction.twox_booster === 1;
+      }
       });
 
       console.log(boosted);

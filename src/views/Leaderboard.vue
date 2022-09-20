@@ -15,30 +15,50 @@
           ></v-progress-circular
         ></v-card>
       </v-dialog>
-      <v-dialog v-model="showDetailDialog" width="600px">
+      <v-dialog v-model="showDetailDialog" scrollable width="600px">
         <v-card v-if="detailDialogData">
-          <v-card-title>
-            <span class="text-h5">{{ detailDialogData.user.name }}</span>
-          </v-card-title>
-          <v-card-text
-            v-for="(d, index) in detailDialogData.point_logs"
-            :key="index"
-          >
-            <p>{{ index }}</p>
-            <div v-for="(log, index) in d" :key="index">
-              <p>{{ log }}</p>
+          <p>{{ detailDialogData.user.name }}</p>
+          <div v-for="(d, index) in detailDialogData.point_logs" :key="index">
+            <div class="mt-5 d-flex justify-space-around align-center">
+              <div
+                class="d-flex flex-column justify-center recent-match-team align-center w-100"
+              >
+                <v-avatar size="38" tile>
+                  <img
+                    :src="
+                      'https://resources.premierleague.com/premierleague/badges/70/t' +
+                      getTeamVS(index).team_h +
+                      '.png'
+                    "
+                  />
+                </v-avatar>
+                <span style="font-size: 13px; letter-spacing: 0.5px">
+                  {{ getTeamVS(index).team_h_name }}
+                </span>
+              </div>
+              <div>VS</div>
+              <div
+                class="d-flex flex-column justify-center recent-match-team align-center"
+              >
+                <v-avatar size="38" tile>
+                  <img
+                    :src="
+                      'https://resources.premierleague.com/premierleague/badges/70/t' +
+                      getTeamVS(index).team_a +
+                      '.png'
+                    "
+                  />
+                </v-avatar>
+                <span style="font-size: 13px; letter-spacing: 0.5px">
+                  {{ getTeamVS(index).team_a_name }}
+                </span>
+              </div>
             </div>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="green darken-1"
-              text
-              @click="showDetailDialog = false"
-            >
-              Agree
-            </v-btn>
-          </v-card-actions>
+            <div v-if="d.length > 0">
+              <div>{{ d }}</div>
+            </div>
+            <div v-else>Empty data</div>
+          </div>
         </v-card>
       </v-dialog>
       <v-container>
@@ -221,6 +241,7 @@ export default {
     loading: true,
     showDetailDialog: false,
     detailDialogData: null,
+    teamData: [],
   }),
   ...mapGetters({
     teams: "teams/teams",
@@ -316,15 +337,32 @@ export default {
         return this.teams.find((x) => x.code == id).name;
       }
     },
+    getTeamVS(data) {
+      const dArr = data.split(" ");
+      const team_h = this.teamData.find((x) => x.id == dArr[0]);
+      const team_a = this.teamData.find((x) => x.id == dArr[2]);
+
+      const returnData = {
+        team_h: team_h.code,
+        team_h_name: team_h.name,
+        team_a: team_a.code,
+        team_a_name: team_a.name,
+      };
+      return returnData;
+    },
     async checkDetail(data) {
-      // this.showDetailDialog = true;
       console.log(data);
+      // this.showDetailDialog = true;
       // this.detailDialogData = data;
+      this.$router.push({
+        name: "leaderboard_detail",
+        params: { id: data.user.id },
+      });
     },
   },
   mounted() {
     this.$ga.page("/leaderboard");
-
+    this.teamData = JSON.parse(localStorage.getItem("teams"));
     if (this.teams) {
       console.log(this.teams);
     }
@@ -385,5 +423,8 @@ export default {
 .predictor-points {
   font-size: 18px;
   color: #4c2fe3;
+}
+.recent-match-team {
+  flex: 1;
 }
 </style>

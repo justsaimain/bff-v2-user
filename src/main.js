@@ -44,7 +44,7 @@ Vue.use(VueAnalytics, {
 });
 Vue.use(Hotjar, {
   id: "3112019", // Hotjar Site ID
-  // isProduction: true,
+  isProduction: true,
   snippetVersion: 6,
 });
 axios.defaults.baseURL = "https://backend.bffsports.com/api";

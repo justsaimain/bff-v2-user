@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Tournament from "../views/Tournament.vue";
 import Leaderboard from "../views/Leaderboard.vue";
+import LeaderboardDetail from "../views/LeaderboardDetail.vue";
 import Setting from "../views/Setting.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
@@ -51,6 +52,12 @@ const routes = [
     path: "/verify",
     name: "Verify",
     component: Verify,
+  },
+  {
+    name: "leaderboard_detail",
+    path: "/leaderboard/:id",
+    component: LeaderboardDetail,
+    props: true,
   },
 ];
 
