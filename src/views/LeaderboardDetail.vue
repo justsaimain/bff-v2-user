@@ -45,36 +45,40 @@
             </v-list>
           </v-card>
         </v-dialog>
-        <v-row class="" v-if="!loading && data">
+        <v-row class="">
           <v-col cols="12">
-            <div class="mb-5">
+            <div class="mb-5" v-if="user">
               <v-card class="pa-3 top-predictor-card" elevation="0">
                 <div
                   class="mt-5 d-flex align-center justify-space-between mx-10"
                 >
-                  <div class="d-flex flex-column align-center justify-center">
+                  <div
+                    class="d-flex flex-column align-center justify-center"
+                    v-if="user"
+                  >
                     <v-avatar size="50" class="predictor-avatar" color="white">
                       <img
                         :style="{
                           'background-size': 'cover',
                           'background-image': `url(${
-                            data.user.profile
-                              ? env.mediaUrl + '/profiles/' + data.user.profile
+                            user.profile
+                              ? env.mediaUrl + '/profiles/' + user.profile
                               : 'https://resources.premierleague.com/premierleague/badges/70/t' +
-                                data.user.fav_team +
+                                user.fav_team +
                                 '.png'
                           })`,
                         }"
                       />
                     </v-avatar>
-                    <p class="predictor-detail">{{ data.user.region }}</p>
+                    <p class="predictor-detail">{{ user.region }}</p>
                   </div>
                   <div class="text-right">
                     <p class="predictor-name mb-2">
-                      {{ data.user.name }}
+                      {{ user.name }}
                     </p>
                     <h3 class="top-predictor-points">
-                      {{ data.total_pts }} Points
+                      <span v-if="data">{{ data.total_pts }} Points</span>
+                      <span v-else>0 Points</span>
                     </h3>
                   </div>
                 </div>
@@ -93,12 +97,12 @@
                   },
                   `gw-tab-${gameWeekTab}`,
                 ]"
-                @click="reloadGameWeek(gameWeekTab, true)"
+                @click="reloadGameWeek(gameWeekTab, id, true)"
               >
                 Game Week {{ gameWeekTab }}
               </v-btn>
             </div>
-            <div class="mb-16">
+            <div class="mb-16" v-if="data">
               <div
                 v-for="(d, index) in data.point_logs"
                 :key="d.id"
@@ -193,22 +197,29 @@ import env from "../env";
 
 export default {
   components: { TopNav, BottomNavigation },
-  props: ["id"],
+  props: ["id", "gw"],
   data: () => ({
     env,
     totalGameWeek: 0,
     loading: true,
     gameWeek: 0,
     data: null,
+    user: null,
     teamData: [],
     showBreakdownDialog: false,
     breakdownDialog: {},
   }),
   methods: {
-    async fetchData() {
+    async reloadGameWeek(gw, user, showLoading) {
+      this.data = null;
+      this.loading = showLoading;
+      this.gameWeek = gw;
+      this.fetchData(user, gw);
+    },
+    async fetchData(user, gw) {
       this.loading = true;
       const response = await axios.get("/leaderboard", {
-        params: { gw: this.gameWeek, user: this.id },
+        params: { gw: gw, user: user },
       });
 
       if (!response.data.success) {
@@ -216,6 +227,12 @@ export default {
       }
 
       const data = response.data.data[0];
+
+      if (data) {
+        this.user = data.user;
+      }
+
+      console.log("user", this.user);
       this.data = data;
 
       setTimeout(() => {
@@ -251,6 +268,7 @@ export default {
     },
   },
   mounted() {
+    this.loading = true;
     this.teamData = JSON.parse(localStorage.getItem("teams"));
     this.totalGameWeek = JSON.parse(
       localStorage.getItem("options")
@@ -258,9 +276,8 @@ export default {
     this.gameWeek = JSON.parse(
       localStorage.getItem("options")
     ).current_gameweek;
-
-    this.fetchData();
-
+    this.gameWeek = this.gw;
+    this.fetchData(this.id, this.gw);
     this.$ga.page("/leaderboard/" + this.id);
   },
 };

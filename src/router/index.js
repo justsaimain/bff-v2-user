@@ -55,7 +55,7 @@ const routes = [
   },
   {
     name: "leaderboard_detail",
-    path: "/leaderboard/:id",
+    path: "/leaderboard/:id/:gw",
     component: LeaderboardDetail,
     props: true,
   },

@@ -356,7 +356,7 @@ export default {
       // this.detailDialogData = data;
       this.$router.push({
         name: "leaderboard_detail",
-        params: { id: data.user.id },
+        params: { id: data.user.id, gw: this.gameWeek },
       });
     },
   },
