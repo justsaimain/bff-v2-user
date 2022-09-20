@@ -45,7 +45,7 @@
             </v-list>
           </v-card>
         </v-dialog>
-        <v-row class="" v-if="!loading">
+        <v-row class="" v-if="!loading && data">
           <v-col cols="12">
             <div class="mb-5">
               <v-card class="pa-3 top-predictor-card" elevation="0">
