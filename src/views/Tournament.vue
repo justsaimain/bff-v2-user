@@ -390,9 +390,9 @@ export default {
     }),
     check2xBoostedExist() {
       const boosted = this.fixtures.filter((f) => {
-      if(f.prediction){
-        return f.prediction.twox_booster === 1;
-      }
+        if (f.prediction) {
+          return f.prediction.twox_booster === 1;
+        }
       });
 
       console.log(boosted);
@@ -551,6 +551,7 @@ export default {
         .post("/prediction", this.predictionForm)
         .then((res) => {
           if (res.data.success == false) {
+            window.fbq("track", "Complete Prediction");
             this.reloadGameWeek(this.predictionForm.event);
             switch (res.data.flag) {
               case "boosted_limit":
