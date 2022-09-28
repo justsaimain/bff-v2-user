@@ -90,7 +90,7 @@ export default {
             // success
             localStorage.setItem("token", response.data.token);
             this.attemptLogin(response.data.token);
-            this.$router.replace({ name: "Setting" });
+            this.$router.replace({ name: "Welcome" });
             window.fbq("track", "Complete Registration");
           } else {
             this.alertMessage = response.data.message;

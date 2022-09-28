@@ -9,6 +9,7 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Verify from "../views/Verify.vue";
 import ForgetPassword from "../views/ForgetPassword.vue";
+import Welcome from "../views/Welcome.vue";
 
 Vue.use(VueRouter);
 
@@ -42,6 +43,11 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register,
+  },
+  {
+    path: "/welcome",
+    name: "Welcome",
+    component: Welcome,
   },
   {
     path: "/forget-password",
