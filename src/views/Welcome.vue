@@ -4,7 +4,7 @@
       <v-container fill-height fluid>
         <v-row align="center" justify="center" class="">
           <v-col cols="12">
-            <h1 class="white--text">Congratulation!</h1>
+            <h1 class="white--text">Congratulations!</h1>
             <h3 class="font-weight-medium white--text">
               You've successfully signed up.
             </h3>
